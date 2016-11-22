@@ -33,15 +33,15 @@ When executing code that invokes this module ensure you have set the following e
 
 .. code-block:: GOOGLE_CLOUD_AUTHENTICATION
 
-This environment variable should hold the file path of your Dow Jones provided security json file (googleApplicationCredentials.json).
+GOOGLE_CLOUD_AUTHENTICATION: This environment variable should hold the file path of your Dow Jones provided security json file (googleApplicationCredentials.json).
 
 .. code-block:: SUBSCRIBER_NAME
 
-Set this environment variable to your Dow Jones provided subscriber name.
+SUBSCRIBER_NAME: Set this environment variable to your Dow Jones provided subscriber name.
 
 .. code-block:: GCLOUD_PROJECT (optional)
 
-Most users will not need to use this variable. If you do not set this environment variable the code will use the default Dow Jones DNA Google Cloud production project name.
+GCLOUD_PROJECT: Most users will not need to use this variable. If you do not set this environment variable the code will use the default Dow Jones DNA Google Cloud production project name.
 
 .. code-block:: Example Execution Command (MacOS)
 
