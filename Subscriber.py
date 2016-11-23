@@ -2,43 +2,39 @@ import os
 from google.cloud import pubsub
 
 # ''' Class that allows you to subscribe to a Dow Jones topic feed. This is a singleton. '''
-
 class Subscriber():
+
     def __init__(self):
-        gCloudProjectName = os.environ['GCLOUD_PROJECT'] if (os.environ.has_key('GCLOUD_PROJECT')) else 'djsyndicationhub'
-        self.pubsub_client = pubsub.Client(project=gCloudProjectName)
-        self.requireGoogleAuthenticationEnvironmentVariable = True
+        self.gCloudProjectName = os.environ['GCLOUD_PROJECT'] if (os.environ.has_key('GCLOUD_PROJECT')) else 'djsyndicationhub'
+        self.require_google_authentication_environment_variable = True
+        self.stop_subscription = False
 
-    def getSubscriberName(self):
-        result = os.environ.has_key('SUBSCRIBER_NAME')
+    def user_key(self):
+        if os.environ.has_key('USER_KEY') != True:
+            raise Exception("You need to set the environment variable \'USER_KEY\' to your Dow Jones provided subscriber name value.")
 
-        if result != True:
-            raise Exception("You need to set the environment variable \'SUBSCRIBER_NAME\' to your Dow Jones provided subscriber name value.")
+        return os.environ['USER_KEY']
 
-        return os.environ['SUBSCRIBER_NAME']
+    def subscription(self, pubsub_client, topic_name):
+        topic = pubsub_client.topic(topic_name)
+        name = topic_name + "_Live_" + self.user_key()
+        return topic.subscription(name)
 
-    def subscribe(self, topics, onMessageCallback):
+    def halt_subscription_messages(self):
+        self.stop_subscription = True
 
-        if (self.requireGoogleAuthenticationEnvironmentVariable and os.environ.has_key('GOOGLE_APPLICATION_CREDENTIALS') != True):
+    DEFAULT_TOPIC_NAME = 'ContentEventTranslated'
+    def subscribe(self, on_message_callback, topic_name=DEFAULT_TOPIC_NAME):
+        pubsub_client = pubsub.Client()
+
+        if (self.require_google_authentication_environment_variable and os.environ.has_key('GOOGLE_APPLICATION_CREDENTIALS') != True):
             raise Exception('You need to set the environment variable \'GOOGLE_APPLICATION_CREDENTIALS\' to the path of your Dow Jones provided security file.')
 
-        for topicName in topics:
-            topic = self.pubsub_client.topic(topicName)
+        subscription = self.subscription(pubsub_client, topic_name)
 
-            name = topicName + "_Live_" + self.getSubscriberName()
-            subscription = topic.subscription(name)
+        while self.stop_subscription != True:
+            results = subscription.pull(return_immediately=False)
 
-            # Change return_immediately=False to block until messages are received.
-            while True:
-                results = subscription.pull(return_immediately=False)
-
-                # Acknowledge received messages. If you do not acknowledge, Pub/Sub will
-                # redeliver the message.
-                if results:
-                    subscription.acknowledge([ack_id for ack_id, message in results])
-
-                onMessageCallback(message, topicName)
-
-
-
-
+            if results:
+                subscription.acknowledge([ack_id for ack_id, message in results])
+                on_message_callback(message, topic_name)
