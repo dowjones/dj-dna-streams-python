@@ -14,8 +14,7 @@ Install this at your project root by invoking the following command line:
 
 .. code-block::
 
- 
- or 
+ TBD 
 
 .. code-block::
 
