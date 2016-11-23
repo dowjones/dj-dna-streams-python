@@ -1,34 +1,29 @@
 import unittest
 from unittest import TestCase
 import os
-from google.cloud import pubsub
-from mock import MagicMock, create_autospec
+from Subscriber import Subscriber
 
 class TestSubscriber(TestCase):
 
     def setUp(self):
         if (os.environ.has_key('GOOGLE_APPLICATION_CREDENTIALS')):
-            print('Key already set')
+            print 'Key already set'
 
         os.environ['GCLOUD_PROJECT'] = 'djsyndicationhub-dev'
         os.environ['USER_KEY'] = 'dev01'
 
     def test_subscribe(self):
-
-        from Subscriber import Subscriber
         subscriber = Subscriber()
 
-        # mock_topic = create_autospec(pubsub.Topic)
-        mock_type_subscription = create_autospec(pubsub.Subscription)
-        subscriber.subscription = MagicMock(return_value=mock_type_subscription)
-
         def callback(message, topic):
-            print('Topic received: ' + topic)
+            print('Topic: {}: Message: {}'.format(topic, message.data.__str__()))
 
         # Set to false for test only.
         subscriber.require_google_authentication_environment_variable = False
 
-        subscriber.subscribe(callback)
+        subscriber.subscribe(callback, 'ContentEventTranslated')
+
+        self.assertEqual(True, True)
 
 if __name__ == '__main__' and __package__ is None:
      unittest.main()
