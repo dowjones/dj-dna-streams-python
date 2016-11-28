@@ -1,7 +1,9 @@
+import os
 import unittest
 from unittest import TestCase
-import os
-from Subscriber import Subscriber
+
+from subscriber.Subscriber import Subscriber
+
 
 class TestSubscriber(TestCase):
 

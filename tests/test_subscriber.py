@@ -1,8 +1,7 @@
+import os
 import unittest
 from unittest import TestCase
-import os
-from google.cloud import pubsub
-from mock import MagicMock, Mock, create_autospec
+
 
 class TestSubscriber(TestCase):
 
@@ -15,7 +14,7 @@ class TestSubscriber(TestCase):
 
     def test_subscribe(self):
 
-        from Subscriber import Subscriber
+        from subscriber.Subscriber import Subscriber
         subscriber = Subscriber()
 
         class StubSubscription():
