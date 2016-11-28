@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup, find_packages
+from distutils.core import setup
 
 setup(
     name='dnaStreaming',
@@ -10,6 +10,7 @@ setup(
     author_email='chris.flesche@dowjones.com',
     url='https://github.dowjones.net/syndicationhub/dj-dna-streaming-python/',
     packages=['subscriber'],
+    package_dir={'subscriber':'lib'},
 
     # metadata for upload to PyPI
     license="PSF",
