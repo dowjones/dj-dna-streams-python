@@ -34,9 +34,9 @@ When executing code that invokes this module ensure you have set the following e
 
 GOOGLE_CLOUD_AUTHENTICATION: This environment variable should hold the file path of your Dow Jones provided security json file (googleApplicationCredentials.json).
 
-.. code-block:: SUBSCRIBER_NAME
+.. code-block:: USER_KEY
 
-SUBSCRIBER_NAME: Set this environment variable to your Dow Jones provided subscriber name.
+USER_KEY: Set this environment variable to your Dow Jones provided user key.
 
 .. code-block:: GCLOUD_PROJECT (optional)
 
