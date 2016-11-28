@@ -2,7 +2,7 @@ import unittest
 from unittest import TestCase
 import os
 from google.cloud import pubsub
-from mock import MagicMock, create_autospec
+from mock import MagicMock, Mock, create_autospec
 
 class TestSubscriber(TestCase):
 
@@ -18,9 +18,19 @@ class TestSubscriber(TestCase):
         from Subscriber import Subscriber
         subscriber = Subscriber()
 
-        # mock_topic = create_autospec(pubsub.Topic)
-        mock_type_subscription = create_autospec(pubsub.Subscription)
-        subscriber.subscription = MagicMock(return_value=mock_type_subscription)
+        class StubSubscription():
+
+            def __init__(self, pubsub_client, topic_name):
+                pass
+
+            def pull(self, return_immediately):
+                return [('ack_id234', object())]
+
+            def acknowledge(self, foo):
+                pass
+
+
+        subscriber.subscription = StubSubscription
 
         def callback(message, topic):
             print('Topic received: ' + topic)

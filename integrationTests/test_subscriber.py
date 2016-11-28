@@ -7,7 +7,7 @@ class TestSubscriber(TestCase):
 
     def setUp(self):
         if (os.environ.has_key('GOOGLE_APPLICATION_CREDENTIALS')):
-            print 'Key already set'
+            print('Key already set')
 
         os.environ['GCLOUD_PROJECT'] = 'djsyndicationhub-dev'
         os.environ['USER_KEY'] = 'dev01'
