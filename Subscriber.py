@@ -37,4 +37,4 @@ class Subscriber():
 
             if results:
                 subscription.acknowledge([ack_id for ack_id, message in results])
-                on_message_callback(message, topic_name)
+                on_message_callback(results.message, topic_name)

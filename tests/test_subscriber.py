@@ -18,11 +18,10 @@ class TestSubscriber(TestCase):
         from Subscriber import Subscriber
         subscriber = Subscriber()
 
-        # mock_topic = create_autospec(pubsub.Topic)
         mock_type_subscription = create_autospec(pubsub.Subscription)
-        subscriber.subscription = MagicMock(return_value=mock_type_subscription)
+        subscriber.subscription = mock_type_subscription
 
-        def callback(message, topic):
+        def callback(message2, topic):
             print('Topic received: ' + topic)
 
         # Set to false for test only.
