@@ -14,5 +14,9 @@ setup(
     # metadata for upload to PyPI
     license="PSF",
 
+    install_requires=[
+        "google-cloud-pubsub >= 0.21.0",
+        "mock == 2.0.0",
+    ]
     # could also include long_description, download_url, classifiers, etc.
     )
