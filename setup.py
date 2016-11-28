@@ -9,12 +9,7 @@ setup(
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
     url='https://github.dowjones.net/syndicationhub/dj-dna-streaming-python/',
-    packages=find_packages(),
-
-    package_data={
-      # If any package contains *.txt or *.rst files, include them:
-      '': ['*.txt', '*.rst']
-    },
+    packages=['Subscriber'],
 
     # metadata for upload to PyPI
     license="PSF",
