@@ -14,7 +14,7 @@ class TestSubscriber(TestCase):
 
     def test_subscribe(self):
 
-        from subscriber.Subscriber import Subscriber
+        from sub.Subscriber import Subscriber
         subscriber = Subscriber()
 
         class StubSubscription():

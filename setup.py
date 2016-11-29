@@ -7,7 +7,7 @@ setup(
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
     url='https://github.dowjones.net/syndicationhub/dj-dna-streaming-python/',
-    packages=['subscriber'],
+    packages=['sub'],
 
     # metadata for upload to PyPI
     license="PSF",

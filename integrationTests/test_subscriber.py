@@ -2,8 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-import Subscriber
-
+from sub import Subscriber
 
 class TestSubscriber(TestCase):
 
