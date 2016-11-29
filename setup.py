@@ -1,7 +1,7 @@
 from distutils.core import setup
 
 setup(
-    name='dnaStreaming',
+    name='dj-dna-streaming-python',
     version='0.9.1',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',

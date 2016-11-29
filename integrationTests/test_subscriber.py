@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-from subscriber.Subscriber import Subscriber
+import Subscriber
 
 
 class TestSubscriber(TestCase):
