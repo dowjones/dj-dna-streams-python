@@ -14,7 +14,7 @@ class TestSubscriber(TestCase):
 
     def test_subscribe(self):
 
-        from sub.Subscriber import Subscriber
+        from dnaStreaming.Subscriber import Subscriber
         subscriber = Subscriber()
 
         class StubSubscription():

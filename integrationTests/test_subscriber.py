@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-from sub import Subscriber
+from dnaStreaming import Subscriber
 
 class TestSubscriber(TestCase):
 
