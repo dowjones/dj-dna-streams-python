@@ -21,7 +21,7 @@ class Config():
         if (not os.access(credentialsPath, os.R_OK)):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(credentialsPath))
 
-        with open('sampleGoogleApplicationCredentials.json', 'r') as f:
+        with open(credentialsPath, 'r') as f:
             self.credentials = json.load(f)
 
     def get_user_key(self):
