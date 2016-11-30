@@ -1,13 +1,16 @@
 import os
 import unittest
+import json
 from unittest import TestCase
 
-
 class TestSubscriber(TestCase):
+    GAP = 'GOOGLE_APPLICATION_CREDENTIALS'
 
     def setUp(self):
-        if (os.environ.has_key('GOOGLE_APPLICATION_CREDENTIALS')):
+        if (os.environ.has_key(self.GAP)):
             print('Key already set')
+
+        os.environ[self.GAP] = './sampleGoogleApplicationCredentials.json'
 
         os.environ['GCLOUD_PROJECT'] = 'djsyndicationhub-dev'
         os.environ['USER_KEY'] = 'dev01'
@@ -31,13 +34,23 @@ class TestSubscriber(TestCase):
 
         subscriber.subscription = StubSubscription
 
+        class StubClient():
+            pass
+
+        subscriber.get_client = StubClient
+
         def callback(message, topic):
             print('Topic received: ' + topic)
 
-        # Set to false for test only.
-        subscriber.require_google_authentication_environment_variable = False
+        subscriber.subscribe(callback, maximum_messages=1)
 
-        subscriber.subscribe(callback)
+    def test_read_credentials(self):
+
+        self.assertEqual(True, True)
+        with open('sampleGoogleApplicationCredentials.json', 'r') as f:
+            data = json.load(f)
+
+        self.assertEquals(data['dj_dna_streaming']['user_key'], 'cool-guy')
 
 if __name__ == '__main__' and __package__ is None:
      unittest.main()
