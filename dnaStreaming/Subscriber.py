@@ -47,7 +47,6 @@ class Subscriber():
                 subscription.acknowledge([ack_id for ack_id, message in results])
                 callback_result = on_message_callback(message, topic_name)
 
-                print('CBR: ' + callback_result.__str__())
                 if (callback_result == False):
                     break
 
