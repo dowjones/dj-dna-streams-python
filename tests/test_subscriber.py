@@ -5,11 +5,9 @@ from unittest import TestCase
 
 class TestSubscriber(TestCase):
     GAP = 'GOOGLE_APPLICATION_CREDENTIALS'
+    message_count = 0
 
     def setUp(self):
-        if (os.environ.has_key(self.GAP)):
-            print('Key already set')
-
         os.environ[self.GAP] = './sampleGoogleApplicationCredentials.json'
 
         os.environ['GCLOUD_PROJECT'] = 'djsyndicationhub-dev'
@@ -39,10 +37,12 @@ class TestSubscriber(TestCase):
 
         subscriber.get_client = StubClient
 
-        def callback(message, topic):
-            print('Topic received: ' + topic)
+        subscriber.subscribe(self.callback, maximum_messages=10)
 
-        subscriber.subscribe(callback, maximum_messages=1)
+    def callback(self, message, topic):
+        self.message_count = self.message_count + 1
+        print('Message number {} received. (Topic is \'{}\')'.format(self.message_count, topic))
+        return True
 
     def test_read_credentials(self):
 
