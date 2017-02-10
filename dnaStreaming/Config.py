@@ -17,15 +17,15 @@ class Config():
                             'Did you set the environment variable \'{0}\' to the path of your Dow Jones provided security file?'
                             .format(self.DOW_JONES_APPLICATION_CREDENTIALS))
 
-        credentials_path = os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS]
+        self.credentials_path = os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS]
 
-        if not os.path.isfile(credentials_path):
-            raise Exception('Encountered problem finding file at path \'{}\'. Does it exist?'.format(credentials_path))
+        if not os.path.isfile(self.credentials_path):
+            raise Exception('Encountered problem finding file at path \'{}\'. Does it exist?'.format(self.credentials_path))
 
-        if not os.access(credentials_path, os.R_OK):
-            raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(credentials_path))
+        if not os.access(self.credentials_path, os.R_OK):
+            raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.credentials_path))
 
-        with open(credentials_path, 'r') as f:
+        with open(self.credentials_path, 'r') as f:
             self.credentials = json.load(f)
 
     def get_user_key(self):

@@ -23,7 +23,7 @@ class Subscriber():
         self.stop_subscription = True
 
     def get_client(self):
-        return pubsub.Client(project=self.g_cloud_project_name, credentials=self.config.credentials)
+        return pubsub.Client.from_service_account_json(self.config.credentials_path)
 
     DEFAULT_UNLIMITED_MESSAGES = -1
 
