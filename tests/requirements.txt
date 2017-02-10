@@ -1,0 +1,5 @@
+-r ../requirements.txt
+pytest==2.9.2
+flake8==2.6.2
+pytest-cov==2.3.0
+pytest-mock==1.1

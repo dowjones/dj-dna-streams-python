@@ -1,52 +1,81 @@
 import os
 import unittest
-import json
 from unittest import TestCase
-from dnaStreaming import Config
+from dnaStreaming.Config import Config
 
 
 class TestConfig(TestCase):
-    GOOGLE_APPLICATION_CREDENTIALS = 'GOOGLE_APPLICATION_CREDENTIALS'
+    DOW_JONES_APPLICATION_CREDENTIALS = 'DOW_JONES_APPLICATION_CREDENTIALS'
 
     def setUp(self):
-        if (os.environ.has_key(self.GOOGLE_APPLICATION_CREDENTIALS)):
+        if self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ:
             print('Key already set')
 
     def test_init_when_no_environment_var(self):
 
-        if (os.environ.has_key(self.GOOGLE_APPLICATION_CREDENTIALS)):
-            os.environ.pop(self.GOOGLE_APPLICATION_CREDENTIALS)
+        if self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ:
+            os.environ.pop(self.DOW_JONES_APPLICATION_CREDENTIALS)
 
         self.assertEqual(True, True)
-        self.assertFalse(os.environ.has_key(self.GOOGLE_APPLICATION_CREDENTIALS))
+        self.assertFalse(self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ)
 
         with self.assertRaises(Exception) as context:
-            config = Config()
+            Config()
 
-        print context.exception.message
-
-        self.assertTrue('Did you set it the environment variable \'GOOGLE_APPLICATION_CREDENTIALS\' to the path of your Dow Jones provided security file?' in context.exception.message)
+        self.assertTrue('Encountered problem reading required environmental variable ' +
+                        '\'DOW_JONES_APPLICATION_CREDENTIALS\'.Did you set the environment variable ' +
+                        '\'DOW_JONES_APPLICATION_CREDENTIALS\' to the path of your Dow Jones provided ' +
+                        'security file?' in context.exception.message)
 
     def test_init_when_credential_file_not_exist(self):
 
-        os.environ[self.GOOGLE_APPLICATION_CREDENTIALS] = './someFileNotExist.txt'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './someFileNotExist.txt'
 
         with self.assertRaises(Exception) as context:
-            config = Config()
+            Config()
 
         self.assertTrue('Does it exist?' in context.exception.message)
 
     def test_init_with_good_credentials_file(self):
 
-        os.environ[self.GOOGLE_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
 
         config = Config()
-
-        userKey = config.get_user_key()
 
         self.assertEqual(config.get_user_key(), 'cool-guy')
         self.assertEqual(config.get_google_cloud_project_name(), 'project-awesome')
         self.assertEqual(config.get_topic(), 'ContentEventTranslated')
 
+    def test_get_google_project_name_when_blank_passed(self):
+
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+
+        config = Config()
+
+        config.credentials[config.DOW_JONES_CONFIG_KEY]['project_name'] = ''
+
+        assert config.get_google_cloud_project_name() == 'djsyndicationhub-prod'
+
+    def test_get_google_project_name_when_none_passed(self):
+
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+
+        config = Config()
+
+        config.credentials[config.DOW_JONES_CONFIG_KEY]['project_name'] = None
+
+        assert config.get_google_cloud_project_name() == 'djsyndicationhub-prod'
+
+    def test_get_google_project_name_when_no_key_passed(self):
+
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+
+        config = Config()
+
+        config.credentials[config.DOW_JONES_CONFIG_KEY].pop('project_name', None)
+
+        assert config.get_google_cloud_project_name() == 'djsyndicationhub-prod'
+
+
 if __name__ == '__main__' and __package__ is None:
-     unittest.main()
+    unittest.main()
