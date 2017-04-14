@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='dj-dna-streaming-python',
-    version='0.9.1',
+    version='0.9.2',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',

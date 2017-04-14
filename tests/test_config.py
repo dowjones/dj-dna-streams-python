@@ -1,7 +1,9 @@
 import os
 import unittest
 from unittest import TestCase
+
 from dnaStreaming.Config import Config
+from tests import TEST_DIR
 
 
 class TestConfig(TestCase):
@@ -38,17 +40,16 @@ class TestConfig(TestCase):
 
     def test_init_with_good_credentials_file(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
-        self.assertEqual(config.get_user_key(), 'cool-guy')
+        self.assertEqual(config.get_user_key(), 'cust-key-sample-123A')
         self.assertEqual(config.get_google_cloud_project_name(), 'project-awesome')
-        self.assertEqual(config.get_topic(), 'ContentEventTranslated')
 
     def test_get_google_project_name_when_blank_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
@@ -58,7 +59,7 @@ class TestConfig(TestCase):
 
     def test_get_google_project_name_when_none_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
@@ -68,7 +69,7 @@ class TestConfig(TestCase):
 
     def test_get_google_project_name_when_no_key_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './sampleGoogleApplicationCredentials.json'
+        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 

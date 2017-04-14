@@ -40,5 +40,5 @@ class Config():
 
         return project_name
 
-    def get_topic(self):
-        return self.credentials[self.DOW_JONES_CONFIG_KEY]['topic']
+    def get_subscriptions(self):
+        return self.credentials[self.DOW_JONES_CONFIG_KEY]['subscriptions']
