@@ -7,31 +7,33 @@ from tests import TEST_DIR
 
 
 class TestConfig(TestCase):
-    DOW_JONES_APPLICATION_CREDENTIALS = 'DOW_JONES_APPLICATION_CREDENTIALS'
+    DOW_JONES_DNA_JSON_PATH = 'DOW_JONES_DNA_JSON_PATH'
 
     def setUp(self):
-        if self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ:
+        if self.DOW_JONES_DNA_JSON_PATH in os.environ:
             print('Key already set')
 
     def test_init_when_no_environment_var(self):
 
-        if self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ:
-            os.environ.pop(self.DOW_JONES_APPLICATION_CREDENTIALS)
+        if self.DOW_JONES_DNA_JSON_PATH in os.environ:
+            os.environ.pop(self.DOW_JONES_DNA_JSON_PATH)
 
         self.assertEqual(True, True)
-        self.assertFalse(self.DOW_JONES_APPLICATION_CREDENTIALS in os.environ)
+        self.assertFalse(self.DOW_JONES_DNA_JSON_PATH in os.environ)
 
         with self.assertRaises(Exception) as context:
             Config()
 
+        print context.exception.message
+
         self.assertTrue('Encountered problem reading required environmental variable ' +
-                        '\'DOW_JONES_APPLICATION_CREDENTIALS\'.Did you set the environment variable ' +
-                        '\'DOW_JONES_APPLICATION_CREDENTIALS\' to the path of your Dow Jones provided ' +
-                        'security file?' in context.exception.message)
+                        '\'DOW_JONES_DNA_JSON_PATH\'. Did you set the environment variable ' +
+                        '\'DOW_JONES_DNA_JSON_PATH\' to the path of your Dow Jones provided ' +
+                        'JSON file (\'DowJonesDNA.json\')?' in context.exception.message)
 
     def test_init_when_credential_file_not_exist(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = './someFileNotExist.txt'
+        os.environ[self.DOW_JONES_DNA_JSON_PATH] = './someFileNotExist.txt'
 
         with self.assertRaises(Exception) as context:
             Config()
@@ -40,7 +42,7 @@ class TestConfig(TestCase):
 
     def test_init_with_good_credentials_file(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
+        os.environ[self.DOW_JONES_DNA_JSON_PATH] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
@@ -49,7 +51,7 @@ class TestConfig(TestCase):
 
     def test_get_google_project_name_when_blank_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
+        os.environ[self.DOW_JONES_DNA_JSON_PATH] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
@@ -59,7 +61,7 @@ class TestConfig(TestCase):
 
     def test_get_google_project_name_when_none_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
+        os.environ[self.DOW_JONES_DNA_JSON_PATH] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
@@ -69,7 +71,7 @@ class TestConfig(TestCase):
 
     def test_get_google_project_name_when_no_key_passed(self):
 
-        os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS] = os.path.join(TEST_DIR, 'sampleCredentials.json')
+        os.environ[self.DOW_JONES_DNA_JSON_PATH] = os.path.join(TEST_DIR, 'sampleCredentials.json')
 
         config = Config()
 
