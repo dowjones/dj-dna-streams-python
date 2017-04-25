@@ -14,7 +14,7 @@ class TestListener(TestCase):
     message_count = 0
 
     def setUp(self):
-        os.environ['DOW_JONES_APPLICATION_CREDENTIALS'] = os.path.join(TEST_DIR, 'dowJonesApplicationCredentials.json')
+        os.environ['DOW_JONES_DNA_JSON_PATH'] = os.path.join(TEST_DIR, 'DowJonesDNA.json')
 
     def callback(self, message, subscription_name):
         self.message_count += 1

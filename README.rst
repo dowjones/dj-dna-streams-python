@@ -17,23 +17,23 @@ git+ssh://git@github.dowjones.net/syndicationhub/dj-dna-streaming-python#egg=dj-
 .. code-block::
 
 
-When executing code that invokes this module ensure you have set the following environment variable -- DOW_JONES_CLOUD_AUTHENTICATION
+When executing code that invokes this module ensure you have set the following environment variable -- DOW_JONES_JSON_CONFIG_PATH
 
-.. code-block:: DOW_JONES_CLOUD_AUTHENTICATION
+.. code-block:: DOW_JONES_JSON_CONFIG_PATH
 
-DOW_JONES_CLOUD_AUTHENTICATION: This environment variable should hold the file path of your Dow Jones provided security json file (e.g., key,json or yourCompanyApplicationCredentials.json).
+DOW_JONES_JSON_CONFIG_PATH: This environment variable should hold the file path of your Dow Jones provided security json file (e.g., 'DowJonesDNA.json').
 
 
 Testing
 _______
 
-Before you run your test, add your Dow Jones application credentials file to the 'tests' directory.
+Before you run your test, add your Dow Jones DNA JSON (DowJonesDNA.json) file to the 'tests' directory.
 
 .. code-block::
 
 cd tests
 pip install -r requirements.txt
-py.test .
+py.test . -s
 
 .. code-block::
 

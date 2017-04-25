@@ -4,20 +4,20 @@ import json
 
 class Config():
 
-    DOW_JONES_APPLICATION_CREDENTIALS = 'DOW_JONES_APPLICATION_CREDENTIALS'
+    DOW_JONES_DNA_JSON_PATH = 'DOW_JONES_DNA_JSON_PATH'
     DOW_JONES_CONFIG_KEY = 'dj_dna_streaming'
 
     def __init__(self):
 
-        needs_credentials = self.DOW_JONES_APPLICATION_CREDENTIALS not in os.environ
+        needs_credentials = self.DOW_JONES_DNA_JSON_PATH not in os.environ
 
         if needs_credentials:
-            raise Exception('Encountered problem reading required environmental variable \'{0}\'.'
-                            .format(self.DOW_JONES_APPLICATION_CREDENTIALS) +
-                            'Did you set the environment variable \'{0}\' to the path of your Dow Jones provided security file?'
-                            .format(self.DOW_JONES_APPLICATION_CREDENTIALS))
+            raise Exception('Encountered problem reading required environmental variable \'{0}\'. '
+                            .format(self.DOW_JONES_DNA_JSON_PATH) +
+                            "Did you set the environment variable \'{0}\' to the path of your Dow Jones provided JSON file ('DowJonesDNA.json')?"
+                            .format(self.DOW_JONES_DNA_JSON_PATH))
 
-        self.credentials_path = os.environ[self.DOW_JONES_APPLICATION_CREDENTIALS]
+        self.credentials_path = os.environ[self.DOW_JONES_DNA_JSON_PATH]
 
         if not os.path.isfile(self.credentials_path):
             raise Exception('Encountered problem finding file at path \'{}\'. Does it exist?'.format(self.credentials_path))
