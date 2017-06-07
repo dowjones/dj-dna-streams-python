@@ -33,15 +33,15 @@ Configuring
 
         In this codebase you will find a file named 'customer_config.json'. Open this file and add your service account ID. Then add your subscription IDs. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
 
-Running the Demonstration
+Running the Demonstration Code
 
-If you have a account service account ID and a subscription ID you can run the demo code! Take your service account ID and subscription ID(s) abd follow the steps above in the 'Configuring' section above. Then follow these steps:
+    If you have a account service account ID and a subscription ID you can run the demo code! Take your service account ID and subscription ID(s) abd follow the steps above in the 'Configuring' section above. Then follow these steps:
 
-    i. At the command prompt, change to the project root directory.
+        i. At the command prompt, change to the project root directory.
 
-    ii. Execute the follow on the command line:
+        ii. Execute the follow on the command line:
 
-            python src/show_stream.py
+                python src/show_stream.py
 
 Testing
 _______
