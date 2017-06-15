@@ -1,9 +1,10 @@
 import json
 from unittest import TestCase
 
-from app.services import credentials_service
-from app.config import Config
-from tests.PatchMixin import PatchMixin
+from dnaStreaming.config import Config
+from dnaStreaming.services import credentials_service
+from dnaStreaming.services import authentication_service
+from PatchMixin import PatchMixin
 
 
 class TestCredentials(TestCase, PatchMixin):
@@ -40,8 +41,6 @@ class TestCredentials(TestCase, PatchMixin):
         assert credentials['type'] == 'service_account'
 
     def test_gc_auth(self):
-        from app.services import authentication_service
-
         streaming_credentials_dict = json.loads(self.streaming_credentials_raw)
 
         credentials = authentication_service.get_authenticated_oauth_credentials(streaming_credentials_dict)

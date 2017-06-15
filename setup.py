@@ -1,4 +1,5 @@
 from distutils.core import setup
+from setuptools import find_packages
 
 setup(
     name='dj-dna-streaming-python',
@@ -7,10 +8,12 @@ setup(
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
     url='https://github.dowjones.net/syndicationhub/dj-dna-streaming-python/',
-    packages=['dnaStreaming'],
+    packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
     license="PSF",
+
+    include_package_data=True,
 
     install_requires=[
         "google-cloud-pubsub >= 0.21.0",
