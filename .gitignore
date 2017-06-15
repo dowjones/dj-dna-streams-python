@@ -3,3 +3,5 @@
 *.pyc
 .idea/*
 /src/tests/DowJonesDNA.json
+r.sh
+/build

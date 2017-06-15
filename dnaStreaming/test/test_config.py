@@ -2,8 +2,8 @@ import os
 import unittest
 from unittest import TestCase
 
-from app.config import Config
-from tests.PatchMixin import PatchMixin
+from dnaStreaming.config import Config
+from PatchMixin import PatchMixin
 
 
 class TestConfig(TestCase, PatchMixin):

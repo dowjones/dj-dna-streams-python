@@ -1,10 +1,10 @@
-from app.listener import Listener
+from dnaStreaming.listener import Listener
 
 listener = Listener()
 
 
-def callback(message, topic):
-    print('Topic: {}: Message: {}'.format(topic, message.data.__str__()))
+def callback(message, subscription_id):
+    print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
     return True  # If desired return False to stop the message flow. This will unblock the process as well.
 
 

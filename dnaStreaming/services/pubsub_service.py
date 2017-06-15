@@ -1,7 +1,7 @@
 from google.cloud import pubsub
 
-from app.services import authentication_service
-from app.services import credentials_service
+from dnaStreaming.services import credentials_service
+from dnaStreaming.services import authentication_service
 
 
 def get_client(config):

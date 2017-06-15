@@ -2,8 +2,6 @@ import json
 
 import requests
 
-from app.config import Config
-
 
 def fetch_credentials(config):
     headers = {
