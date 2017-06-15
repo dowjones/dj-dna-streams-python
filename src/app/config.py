@@ -9,9 +9,10 @@ class Config(object):
     ENV_VAR_SUBSCRIPTION_IDS = 'SUBSCRIPTION_IDS'
     ENV_VAR_CREDENTIALS_URI = 'CREDENTIALS_URI'
 
-    def __init__(self):
+    def __init__(self, account_id=None):
         self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
         self.initialized = False
+        self.account_id = account_id
 
     def _initialize(self):
         self._validate()
@@ -29,10 +30,14 @@ class Config(object):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
 
     def service_account_id(self):
-        service_account_id = os.getenv(self.ENV_VAR_SERVICE_ACCOUNT_ID)
+        service_account_id = None
+        if self.account_id is not None:
+            service_account_id = self.account_id
+        else:
+            service_account_id = os.getenv(self.ENV_VAR_SERVICE_ACCOUNT_ID)
 
-        if service_account_id is None:
-            service_account_id = self._service_account_id_from_file()
+            if service_account_id is None:
+                service_account_id = self._service_account_id_from_file()
 
         return service_account_id
 

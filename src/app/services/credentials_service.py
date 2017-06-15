@@ -2,12 +2,10 @@ import json
 
 import requests
 
-from app.Config import Config
+from app.config import Config
 
 
-def fetch_credentials():
-    config = Config()
-
+def fetch_credentials(config):
     headers = {
         'user-key': config.service_account_id()
     }
