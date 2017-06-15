@@ -1,27 +1,26 @@
 import google
 
-from app.Config import Config
+from app.config import Config
 from app.services import pubsub_service
 
 
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = -1
 
-    def __init__(self):
+    def __init__(self, account_id=None):
         self.stop_subscription = False
 
-        config = Config()
+        config = Config(account_id)
         self._initialize(config)
 
     def _initialize(self, config):
-        self.user_key = config.service_account_id()
-        self.subscriptions_ids = config.subscriptions()
+        self.config = config
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES):
         limit_pull_calls = not (maximum_messages == self.DEFAULT_UNLIMITED_MESSAGES)
-        pubsub_client = pubsub_service.get_client()
+        pubsub_client = pubsub_service.get_client(self.config)
 
-        for subscription_id in self.subscriptions_ids:
+        for subscription_id in self.config.subscriptions():
             subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 
             while not self.stop_subscription:

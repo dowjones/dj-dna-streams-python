@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-from app.Config import Config
+from app.config import Config
 from tests.PatchMixin import PatchMixin
 
 
@@ -75,6 +75,14 @@ class TestConfig(TestCase, PatchMixin):
         assert subscription_ids[1] == 'DEF'
         assert os.environ[Config.ENV_VAR_CREDENTIALS_URI] == config.credentials_uri()
 
+    def test_account_id_passed_success(self):
+        # Arrange
+        # Act
+        config = Config(account_id='123')
+
+        # Assert
+        print config.service_account_id()
+        assert config.service_account_id() == '123'
 
 if __name__ == '__main__' and __package__ is None:
     unittest.main()

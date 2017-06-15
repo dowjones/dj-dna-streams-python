@@ -2,6 +2,7 @@ import json
 from unittest import TestCase
 
 from app.services import credentials_service
+from app.config import Config
 from tests.PatchMixin import PatchMixin
 
 
@@ -29,8 +30,10 @@ class TestCredentials(TestCase, PatchMixin):
 
         self.patch_module(credentials_service._get_requests, RequestsMock(response_expected))
 
+        config = Config()
+
         # Act
-        credentials = credentials_service.fetch_credentials()
+        credentials = credentials_service.fetch_credentials(config)
 
         # Assert
         assert credentials
