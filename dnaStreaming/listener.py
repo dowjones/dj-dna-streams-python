@@ -1,15 +1,19 @@
+import sys
+import time
+import threading
+
 import google
 
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service
+from thread_utils import wait_while_processing
+from subscription_handler import create_subscription_thread
 
 
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = -1
 
     def __init__(self, service_account_id=None):
-        self.stop_subscription = False
-
         config = Config(service_account_id)
         self._initialize(config)
 
@@ -22,23 +26,18 @@ class Listener(object):
 
         subscription_ids = subscription_ids if subscription_ids is not None else self.config.subscriptions()
 
+        if len(subscription_ids) == 0:
+            raise Exception('No subscriptions specified. You must specify subscriptions when calling the \'listen\' function.')
+
+        threads = []
         for subscription_id in subscription_ids:
             subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 
-            while not self.stop_subscription:
+            print("Listening to subscription: {}".format(subscription_id))
 
-                if limit_pull_calls:
-                    if maximum_messages <= 0:
-                        break
+            thread = create_subscription_thread(limit_pull_calls, maximum_messages, subscription_id, subscription, on_message_callback)
+            threads.append(thread)
 
-                results = subscription.pull(return_immediately=False)
+        print('Listeners for subscriptions have been configured, set and await message arrival.')
 
-                if results:
-                    subscription.acknowledge([ack_id for ack_id, message in results])
-                    callback_result = on_message_callback(message, subscription_id)
-
-                    if not callback_result:
-                        break
-
-                    if limit_pull_calls:
-                        maximum_messages -= 1
+        wait_while_processing(threads)
