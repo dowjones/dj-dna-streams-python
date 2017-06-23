@@ -1,13 +1,9 @@
-import sys
-import time
-import threading
-
 import google
 
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service
-from thread_utils import wait_while_processing
 from subscription_handler import create_subscription_thread
+from thread_utils import wait_while_processing
 
 
 class Listener(object):

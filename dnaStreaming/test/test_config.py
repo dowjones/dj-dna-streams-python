@@ -2,8 +2,8 @@ import os
 import unittest
 from unittest import TestCase
 
-from dnaStreaming.config import Config
 from PatchMixin import PatchMixin
+from dnaStreaming.config import Config
 
 
 class TestConfig(TestCase, PatchMixin):
@@ -16,7 +16,7 @@ class TestConfig(TestCase, PatchMixin):
         self.ensure_remove_environment_variable(Config.ENV_VAR_CREDENTIALS_URI)
 
     def ensure_remove_environment_variable(self, key):
-        if os.environ.has_key(key):
+        if key in os.environ:
             os.environ.pop(key)
 
     def test_customer_config_not_found_success(self):
@@ -83,6 +83,7 @@ class TestConfig(TestCase, PatchMixin):
         # Assert
         print config.service_account_id()
         assert config.service_account_id() == '123'
+
 
 if __name__ == '__main__' and __package__ is None:
     unittest.main()
