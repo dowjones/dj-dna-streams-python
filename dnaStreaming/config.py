@@ -59,8 +59,14 @@ class Config(object):
 
     def convert_subscription_ids_from_env_var(self, subscription_ids_string):
         sub_ids = subscription_ids_string.split(',')
+
+        subs_id_transformed = []
+        for x in sub_ids:
+            subs_id_transformed.append(x.strip())
+
         token = '","'
-        sub_ids = '["' + token.join(sub_ids) + '"]'
+        sub_ids = '["' + token.join(subs_id_transformed) + '"]'
+
         return json.loads(sub_ids)
 
     def _set_customer_config_path(self, path):
