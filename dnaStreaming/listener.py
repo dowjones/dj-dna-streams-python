@@ -2,8 +2,6 @@ import google
 
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service
-from subscription_handler import create_subscription_thread
-from thread_utils import wait_while_processing
 
 
 class Listener(object):
@@ -12,6 +10,7 @@ class Listener(object):
     def __init__(self, service_account_id=None):
         config = Config(service_account_id)
         self._initialize(config)
+        self.current_subscription_index = 0
 
     def _initialize(self, config):
         self.config = config
@@ -25,15 +24,42 @@ class Listener(object):
         if len(subscription_ids) == 0:
             raise Exception('No subscriptions specified. You must specify subscriptions when calling the \'listen\' function.')
 
-        threads = []
+        subscription_pullers = []
         for subscription_id in subscription_ids:
             subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
-
-            print("Listening to subscription: {}".format(subscription_id))
-
-            thread = create_subscription_thread(limit_pull_calls, maximum_messages, subscription_id, subscription, on_message_callback)
-            threads.append(thread)
+            subscription_pullers.append(subscription)
 
         print('Listeners for subscriptions have been configured, set and await message arrival.')
 
-        wait_while_processing(threads)
+        current_sub_puller = -1
+        count = 0
+        while True:
+            subscription, current_sub_puller = self.get_next_subscription_id(current_sub_puller, subscription_pullers)
+
+            results = subscription.pull(return_immediately=True)
+
+            if results:
+                count += 1
+                subscription.acknowledge([ack_id for ack_id, message in results])
+
+                print "Count: {}".format(count)
+
+                callback_result = on_message_callback(message, subscription_id)
+
+                if not callback_result:
+                    break
+
+                if limit_pull_calls:
+                    maximum_messages -= 1
+                    if maximum_messages <= 0:
+                        return
+
+    def get_next_subscription_id(self, current_subscription_index, subscriptions):
+        if len(subscriptions) <= current_subscription_index + 1:
+            current_subscription_index = 0
+        else:
+            current_subscription_index += 1
+
+        sub = subscriptions[current_subscription_index]
+
+        return sub, current_subscription_index
