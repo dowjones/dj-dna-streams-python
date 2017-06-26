@@ -6,7 +6,7 @@ class Config(object):
     CRED_PROD_URI = 'https://extraction-api-dot-djsyndicationhub-prod.appspot.com/alpha/accounts/streaming-credentials'
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
     ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
-    ENV_VAR_SUBSCRIPTION_IDS = 'SUBSCRIPTION_IDS'
+    ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
     ENV_VAR_CREDENTIALS_URI = 'CREDENTIALS_URI'
 
     def __init__(self, account_id=None):
@@ -47,37 +47,25 @@ class Config(object):
 
         return self.customer_config['service_account_id']
 
-    def subscriptions(self):
+    def subscription(self):
 
-        subscriptions = None
-        if os.getenv(self.ENV_VAR_SUBSCRIPTION_IDS) is not None:
-            subscriptions = self.convert_subscription_ids_from_env_var(os.getenv(self.ENV_VAR_SUBSCRIPTION_IDS))
+        subscription = None
+        if os.getenv(self.ENV_VAR_SUBSCRIPTION_ID) is not None:
+            subscription = os.getenv(self.ENV_VAR_SUBSCRIPTION_ID)
         else:
-            subscriptions = self._subscription_ids_from_file()
+            subscription = self._subscription_id_from_file()
 
-        return subscriptions
-
-    def convert_subscription_ids_from_env_var(self, subscription_ids_string):
-        sub_ids = subscription_ids_string.split(',')
-
-        subs_id_transformed = []
-        for x in sub_ids:
-            subs_id_transformed.append(x.strip())
-
-        token = '","'
-        sub_ids = '["' + token.join(subs_id_transformed) + '"]'
-
-        return json.loads(sub_ids)
+        return subscription
 
     def _set_customer_config_path(self, path):
         self.customer_config_path = path
         self._initialize()
 
-    def _subscription_ids_from_file(self):
+    def _subscription_id_from_file(self):
         if not self.initialized:
             self._initialize()
 
-        return self.customer_config['subscription_ids']
+        return self.customer_config['subscription_id']
 
     def credentials_uri(self):
         return os.getenv(self.ENV_VAR_CREDENTIALS_URI, self.CRED_PROD_URI)

@@ -15,27 +15,22 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_ids=None):
+    def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id=None):
         limit_pull_calls = not (maximum_messages == self.DEFAULT_UNLIMITED_MESSAGES)
         pubsub_client = pubsub_service.get_client(self.config)
 
-        subscription_ids = subscription_ids if subscription_ids is not None else self.config.subscriptions()
+        subscription_id = subscription_id if subscription_id is not None else self.config.subscription()
 
-        if len(subscription_ids) == 0:
-            raise Exception('No subscriptions specified. You must specify subscriptions when calling the \'listen\' function.')
+        if subscription_id is None or subscription_id.strip() == '':
+            raise Exception(
+                'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        subscription_pullers = []
-        for subscription_id in subscription_ids:
-            subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
-            subscription_pullers.append(subscription)
+        subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 
         print('Listeners for subscriptions have been configured, set and await message arrival.')
 
-        current_sub_puller = -1
         count = 0
         while True:
-            subscription, current_sub_puller = self.get_next_subscription_id(current_sub_puller, subscription_pullers)
-
             results = subscription.pull(return_immediately=True)
 
             if results:
@@ -53,13 +48,3 @@ class Listener(object):
                     maximum_messages -= 1
                     if maximum_messages <= 0:
                         return
-
-    def get_next_subscription_id(self, current_subscription_index, subscriptions):
-        if len(subscriptions) <= current_subscription_index + 1:
-            current_subscription_index = 0
-        else:
-            current_subscription_index += 1
-
-        sub = subscriptions[current_subscription_index]
-
-        return sub, current_subscription_index
