@@ -19,3 +19,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Added customer_config.json file. See README.rst for usage explanation.
 - [changed] - Get the user's credentials information by making a REST call to Dow Jones extraction API service.
 - [Tests] Updated tests to use the changes described above.
+
+1.0.1 / 2017-06-09
+==================
+- [breaking] Removed abililty to consume more than one stream at a time.
+- [tests] Updated tests.
+- [docs] Updated README.
