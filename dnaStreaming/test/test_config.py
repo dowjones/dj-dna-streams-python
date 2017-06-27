@@ -2,8 +2,8 @@ import os
 import unittest
 from unittest import TestCase
 
-from dnaStreaming.config import Config
 from PatchMixin import PatchMixin
+from dnaStreaming.config import Config
 
 
 class TestConfig(TestCase, PatchMixin):
@@ -12,11 +12,11 @@ class TestConfig(TestCase, PatchMixin):
 
     def tearDown(self):
         self.ensure_remove_environment_variable(Config.ENV_VAR_SERVICE_ACCOUNT_ID)
-        self.ensure_remove_environment_variable(Config.ENV_VAR_SUBSCRIPTION_IDS)
+        self.ensure_remove_environment_variable(Config.ENV_VAR_SUBSCRIPTION_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_CREDENTIALS_URI)
 
     def ensure_remove_environment_variable(self, key):
-        if os.environ.has_key(key):
+        if key in os.environ:
             os.environ.pop(key)
 
     def test_customer_config_not_found_success(self):
@@ -48,18 +48,16 @@ class TestConfig(TestCase, PatchMixin):
 
         # Act
         service_account_id = config.service_account_id()
-        subscriptions = config.subscriptions()
+        subscription = config.subscription()
 
         # Assert
         assert service_account_id
-        assert isinstance(subscriptions, list)
-        assert len(subscriptions) == 2
-        assert subscriptions[0] == 'bar'
+        assert subscription == 'bar'
 
     def test_environment_variables_success(self):
         # Arrange
         os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] = '123'
-        os.environ[Config.ENV_VAR_SUBSCRIPTION_IDS] = 'ABC,DEF'
+        os.environ[Config.ENV_VAR_SUBSCRIPTION_ID] = 'ABC'
         os.environ[Config.ENV_VAR_CREDENTIALS_URI] = 'http://hiptotherythum.com'
 
         # Act
@@ -69,10 +67,8 @@ class TestConfig(TestCase, PatchMixin):
 
         # Assert
         assert os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] == config.service_account_id()
-        subscription_ids = config.subscriptions()
-        assert len(subscription_ids) == 2
-        assert subscription_ids[0] == 'ABC'
-        assert subscription_ids[1] == 'DEF'
+        subscription_id = config.subscription()
+        assert subscription_id == 'ABC'
         assert os.environ[Config.ENV_VAR_CREDENTIALS_URI] == config.credentials_uri()
 
     def test_account_id_passed_success(self):
@@ -83,6 +79,7 @@ class TestConfig(TestCase, PatchMixin):
         # Assert
         print config.service_account_id()
         assert config.service_account_id() == '123'
+
 
 if __name__ == '__main__' and __package__ is None:
     unittest.main()

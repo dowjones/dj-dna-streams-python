@@ -1,4 +1,4 @@
 {
   "service_account_id": "foo",
-  "subscription_ids": ["bar", "cherry"]
+  "subscription_id": "bar"
 }
