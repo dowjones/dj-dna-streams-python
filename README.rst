@@ -8,17 +8,17 @@ How To Use
 ----------
 This library is for Dow Jones customers consuming a Dow Jones DNA stream.
 
-To use this we recommend pip installing this by making the following addition to your requirements.txt:
+To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
 
 .. code-block::
 
-git+ssh://git@github.dowjones.net/syndicationhub/dj-dna-streaming-python#egg=dj-dna-streaming-python
+git+ssh://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-python
 
 .. code-block::
 
 Configuring
 
-    To run this code, you need to provide both your 'service account ID' and your subscriptions. There are 2 ways to do this. You can either set environment variables or you can use a configuration file.
+    To run this code, you need to provide both your 'service account ID' and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
 
     1. Set environment variables.
 
@@ -53,7 +53,7 @@ Configuring
 
         Remember that passing account ID in this way will override the account ID environment variable and the config file setting.
 
-        To pass subscription IDs as a parameter, you may pass like like so:
+        To pass subscription IDs as a parameter, you may pass subscription ID like like so:
 
 .. code-block::
 
@@ -65,7 +65,7 @@ Configuring
                 print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
                 return True  # If desired return False to stop the message flow. This will unblock the process as well.
 
-            listener.listen(callback, maximum_messages=10, subscription_ids=['<YOUR SUBSCRIPTION ID HERE>')  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
+            listener.listen(callback, maximum_messages=10, subscription_id='<YOUR SUBSCRIPTION ID HERE>')  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
 
 .. code-block::
 
