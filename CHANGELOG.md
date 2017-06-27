@@ -11,3 +11,11 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [breaking] Replaced references 'DOW_JONES_APPLICATION_CREDENTIALS' envinronmental variable for 'DOW_JONES_DNA_JSON_PATH'.
 - [breaking] Replaced system's filename expectation for 'dowJonesApplicationCredentials.json' to 'DowJonesDNA.json':
 - [Tests] Updated test to use the changes described above.
+
+1.0.0 / 2017-06-07
+==================
+- [docs] Updated README.rst
+- [breaking] - No longer using 'DowJonesDNA.json' file.
+- [changed] - Added customer_config.json file. See README.rst for usage explanation.
+- [changed] - Get the user's credentials information by making a REST call to Dow Jones extraction API service.
+- [Tests] Updated tests to use the changes described above.

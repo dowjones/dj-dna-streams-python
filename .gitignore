@@ -2,4 +2,6 @@
 *.bak
 *.pyc
 .idea/*
-/tests/DowJonesDNA.json
+/src/tests/DowJonesDNA.json
+r.sh
+/build
