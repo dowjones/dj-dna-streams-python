@@ -17,12 +17,12 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        "backports-abc==0.5"
-        "BigQuery-Python==1.10.0"
-        "boto==2.39.0"
-        "certifi==2016.9.26"
-        "configparser==3.5.0"
-        "coverage==4.3.4"
+        "backports-abc==0.5",
+        "BigQuery-Python==1.10.0",
+        "boto==2.39.0",
+        "certifi==2016.9.26",
+        "configparser==3.5.0",
+        "coverage==4.3.4",
         "docutils==0.13.1",
         "dominate==2.3.1",
         "enum34==1.1.6",
