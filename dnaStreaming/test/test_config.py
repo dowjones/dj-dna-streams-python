@@ -44,7 +44,9 @@ class TestConfig(TestCase, PatchMixin):
     def test_get_service_account_and_subs_success(self):
         # Arrange
         config = Config()
-        config._set_customer_config_path(os.path.abspath('./test_customer_config.json'))
+
+        fileFolder = os.path.dirname(os.path.realpath(__file__))
+        config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
 
         # Act
         service_account_id = config.service_account_id()
@@ -62,7 +64,8 @@ class TestConfig(TestCase, PatchMixin):
 
         # Act
         config = Config()
-        config.customer_config_path = os.path.abspath('./test_customer_config.json')
+        fileFolder = os.path.dirname(os.path.realpath(__file__))
+        config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
         config._initialize()
 
         # Assert
