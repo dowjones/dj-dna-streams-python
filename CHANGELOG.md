@@ -32,3 +32,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Corrected URI in setup.py.
 - [tests] Fixed 2 broken tests in test_config.py.
 - [docs] Updated README with more complete instructions.
+
+1.0.3 / 2017-06-29
+==================
+- [changed] - Changed default PROD URI.

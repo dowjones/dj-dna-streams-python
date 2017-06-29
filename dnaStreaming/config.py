@@ -3,7 +3,7 @@ import os
 
 
 class Config(object):
-    CRED_PROD_URI = 'https://extraction-api-dot-djsyndicationhub-prod.appspot.com/alpha/accounts/streaming-credentials'
+    CRED_PROD_URI = 'https://api.beta.dowjones.io/alpha/accounts/streaming-credentials'
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
     ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
     ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
