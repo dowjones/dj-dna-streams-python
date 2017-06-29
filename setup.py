@@ -12,7 +12,7 @@ setup(
     packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
-    license="PSF",
+    license="MIT",
 
     include_package_data=True,
 
