@@ -22,6 +22,13 @@ the subscription *and* consuming it. Instead they will just consume an already e
 
 1.0.1 / 2017-06-09
 ==================
-- [breaking] Removed abililty to consume more than one stream at a time.
+- [breaking] Removed ability to consume more than one stream at a time.
 - [tests] Updated tests.
 - [docs] Updated README.
+
+1.0.2 / 2017-06-29
+==================
+- [changed] - Reduced the listed dependencies in requirements.txt and setup.py.
+- [changed] - Corrected URI in setup.py.
+- [tests] Fixed 2 broken tests in test_config.py.
+- [docs] Updated README with more complete instructions.

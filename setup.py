@@ -4,11 +4,11 @@ from setuptools import find_packages
 
 setup(
     name='dj-dna-streaming-python',
-    version='1.0.1',
+    version='1.0.2',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
-    url='https://github.dowjones.net/syndicationhub/dj-dna-streaming-python/',
+    url='https://github.com/dowjones/dj-dna-streams-python',
     packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
