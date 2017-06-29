@@ -1,4 +1,4 @@
-# dj-dna-streaming-javascript
+# dj-dna-streams-python
 ========================================
 
 DNA Streaming Client - written in Python
@@ -6,6 +6,8 @@ DNA Streaming Client - written in Python
 
 How To Use
 ----------
+
+
 This library is for Dow Jones customers consuming a Dow Jones DNA stream.
 
 To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
@@ -71,19 +73,7 @@ Configuring
 
         Remember that passing subscription ID(s) in this way will override the subscription IDs environment variable and the config file setting.
 
-Running the Demonstration Code
 
-    If you have a account service account ID and a subscription ID you can run the demo code! Take your service account ID and subscription ID(s) abd follow the steps above in the 'Configuring' section above. Then follow these steps:
-
-        i. At the command prompt, change to the project root directory.
-
-        ii. Install the library like so:
-
-                python setup.py install
-
-        ii. Then execute the follow on the command line:
-
-                python dnaStreaming/demo/show_stream.py
 
 Testing
 _______
@@ -107,3 +97,66 @@ If you are maintaining this library, ensure you run flake8 before you commit. At
 flake8 ./dnaStreaming ./tests
 
 .. code-block::
+
+
+Running the Demonstration Code/Development
+__________________________________________
+
+If you are enhancing this codebase (and not just using it as a library), follow these example MacOS steps:
+
+Checkout the Project from Git.
+
+Go to the Project Root.
+
+Create a Virtual Environment.
+
+    On MacOS execute this command.
+
+        .. code-block::
+
+        virtualenv venv
+
+        .. code-block::
+
+    Then activate the virutal environment by executing this command:
+
+        .. code-block::
+
+        source ./venv/bin/activate
+
+        .. code-block::
+
+Install the Dependencies
+
+    Execute the following command:
+
+        .. code-block::
+
+        pip install -r requirements.txt
+
+        .. code-block::
+
+Install the App:
+
+    Execute the following command:
+
+        .. code-block::
+
+        python setup.py install
+
+        .. code-block::
+
+
+Set the Configuration Variables
+
+    See the config section.
+
+Run the Demo Code
+
+    Execute the following at the project root:
+
+        .. code-block::
+
+        python ./dnaStreaming/demo/show_stream.py -s
+
+        .. code-block::
