@@ -36,3 +36,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 1.0.3 / 2017-06-29
 ==================
 - [changed] - Changed default PROD URI.
+
+1.0.4 / 2017-06-29
+==================
+- [docs] - Updated README. Git project pip install should use 'https'.
