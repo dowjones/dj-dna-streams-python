@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest import TestCase
 
-from PatchMixin import PatchMixin
+from .PatchMixin import PatchMixin
 from dnaStreaming.config import Config
 
 
@@ -80,7 +80,7 @@ class TestConfig(TestCase, PatchMixin):
         config = Config(account_id='123')
 
         # Assert
-        print config.service_account_id()
+        print(config.service_account_id())
         assert config.service_account_id() == '123'
 
 

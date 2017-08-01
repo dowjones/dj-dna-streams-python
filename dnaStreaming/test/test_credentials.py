@@ -4,7 +4,7 @@ from unittest import TestCase
 from dnaStreaming.config import Config
 from dnaStreaming.services import credentials_service
 from dnaStreaming.services import authentication_service
-from PatchMixin import PatchMixin
+from .PatchMixin import PatchMixin
 
 
 class TestCredentials(TestCase, PatchMixin):
