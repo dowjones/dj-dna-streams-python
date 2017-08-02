@@ -2,6 +2,9 @@ import google
 
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service
+import time
+import sys
+from dnaStreaming import logger
 
 
 class Listener(object):
@@ -27,24 +30,33 @@ class Listener(object):
 
         subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 
-        print('Listeners for subscriptions have been configured, set and await message arrival.')
+        logger.info('Listeners for subscriptions have been configured, set and await message arrival.')
 
         count = 0
         while True:
-            results = subscription.pull(return_immediately=True)
+            try:
+                results = subscription.pull(return_immediately=True)
 
-            if results:
-                count += 1
-                subscription.acknowledge([ack_id for ack_id, message in results])
+                if results:
 
-                print "Count: {}".format(count)
+                    subscription.acknowledge([ack_id for ack_id, message in results])
 
-                callback_result = on_message_callback(message, subscription_id)
+                    callback_result = on_message_callback(message, subscription_id)
 
-                if not callback_result:
-                    break
+                    count += 1
 
-                if limit_pull_calls:
-                    maximum_messages -= 1
-                    if maximum_messages <= 0:
-                        return
+                    if not callback_result:
+                        break
+
+                    if limit_pull_calls:
+                        maximum_messages -= 1
+                        if maximum_messages <= 0:
+                            return
+
+            except google.gax.errors.GaxError:
+                error = sys.exc_info()[0]
+                logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(error.msg))
+                logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
+                time.sleep(10)
+                pubsub_client = pubsub_service.get_client(self.config)
+                subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)

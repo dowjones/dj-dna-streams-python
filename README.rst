@@ -19,6 +19,7 @@ git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-pyt
 .. code-block::
 
 Configuring
+___________
 
     To run this code, you need to provide both your 'service account ID' and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
 
@@ -73,6 +74,10 @@ Configuring
 
         Remember that passing subscription ID(s) in this way will override the subscription IDs environment variable and the config file setting.
 
+Log Files
+_________
+
+    Very minimal logging is written to the module's path 'logs/dj-dna-streaming-python.log'. To keep maintenance simple this log is overwritten every time the app starts.
 
 
 Testing
