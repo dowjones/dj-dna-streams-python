@@ -40,3 +40,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 1.0.4 / 2017-06-29
 ==================
 - [docs] - Updated README. Git project pip install should use 'https'.
+
+1.0.5 / 2017-08-02
+==================
+- [changed] - Added Google API Extension (GaxError) error handling. Adding a logging file that will catch logged information. Log name is 'logs/dj-dna-streaming-python.log'.
+- [docs] - Updated README with information about logs.  
