@@ -53,9 +53,8 @@ class Listener(object):
                         if maximum_messages <= 0:
                             return
 
-            except google.gax.errors.GaxError:
-                error = sys.exc_info()[0]
-                logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(error.msg))
+            except google.gax.errors.GaxError, e:
+                logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
                 logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
                 time.sleep(10)
                 pubsub_client = pubsub_service.get_client(self.config)

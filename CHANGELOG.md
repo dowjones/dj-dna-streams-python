@@ -46,7 +46,11 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Added Google API Extension (GaxError) error handling. Adding a logging file that will catch logged information. Log name is 'logs/dj-dna-streaming-python.log'.
 - [docs] - Updated README with information about logs.  
 
-1.0.6 / 2017-08-03
+1.0.6 / 2017-08-04
+==================
+- [changed] - Fixed how we handle GaxErrors
+
+1.0.7 / 2017-08-04
 ==================
 - [changed] - Added tox tests to test against python2 and python3.
 - [changed] - Made some python3 compatibility changes. 
