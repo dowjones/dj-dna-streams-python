@@ -5,6 +5,12 @@ from unittest import TestCase
 from .PatchMixin import PatchMixin
 from dnaStreaming.config import Config
 
+# Python3 has FileNotFoundError defined. Python2 does not.
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
+
 
 class TestConfig(TestCase, PatchMixin):
     def setUp(self):
@@ -25,7 +31,7 @@ class TestConfig(TestCase, PatchMixin):
         path_bogus = '\\does\\not\\exist'
         config.customer_config_path = path_bogus
 
-        error_message_expected = 'Encountered problem finding \'customer_config.json\' at path \'\\does\\not\\exist\'. Does it exist?'
+        error_message_expected = 'No such file or directory'
 
         # Act
         was_exception_thrown = False
@@ -33,13 +39,15 @@ class TestConfig(TestCase, PatchMixin):
         error_message_actual = None
         try:
             config._validate()
-        except Exception as ex:
-            error_message_actual = ex.message
+        except FileNotFoundError as ex:
+            error_message_actual = ex.strerror
+            error_message_filename = ex.filename
             was_exception_thrown = True
 
         # Assert
         assert was_exception_thrown
         assert error_message_expected == error_message_actual
+        assert path_bogus == error_message_filename
 
     def test_get_service_account_and_subs_success(self):
         # Arrange
