@@ -1,4 +1,4 @@
-# dj-dna-streams-python
+dj-dna-streams-python
 ========================================
 
 DNA Streaming Client - written in Python
