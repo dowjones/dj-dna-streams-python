@@ -38,20 +38,18 @@ class Listener(object):
                 results = subscription.pull(return_immediately=True)
 
                 if results:
+                    for (ack_id, msg) in results:
+                        callback_result = on_message_callback(msg, subscription_id)
+                        if not callback_result:
+                            break
 
-                    subscription.acknowledge([ack_id for ack_id, message in results])
+                        subscription.acknowledge([ack_id])
+                        count += 1
 
-                    callback_result = on_message_callback(message, subscription_id)
-
-                    count += 1
-
-                    if not callback_result:
-                        break
-
-                    if limit_pull_calls:
-                        maximum_messages -= 1
-                        if maximum_messages <= 0:
-                            return
+                        if limit_pull_calls:
+                            maximum_messages -= 1
+                            if maximum_messages <= 0:
+                                return
 
             except google.gax.errors.GaxError as e:
                 logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
