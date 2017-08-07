@@ -49,3 +49,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 1.0.6 / 2017-08-04
 ==================
 - [changed] - Fixed how we handle GaxErrors
+
+1.0.7 / 2017-08-04
+==================
+- [changed] - Added tox tests to test against python2 and python3.
+- [changed] - Made some python3 compatibility changes. 

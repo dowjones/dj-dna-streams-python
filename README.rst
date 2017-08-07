@@ -85,9 +85,17 @@ _______
 
 .. code-block::
 
-cd dnaStreaming/tests
+cd dnaStreaming/test
 pip install -r requirements.txt
 py.test . -s
+
+.. code-block::
+
+or, alternatively, to test against python2.7 and python3.5:
+
+.. code-block::
+
+tox
 
 .. code-block::
 
