@@ -51,7 +51,7 @@ class Listener(object):
                             if maximum_messages <= 0:
                                 return
 
-            except google.gax.errors.GaxError, e:
+            except google.gax.errors.GaxError as e:
                 logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
                 logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
                 time.sleep(10)
