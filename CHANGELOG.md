@@ -54,3 +54,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 ==================
 - [changed] - Added tox tests to test against python2 and python3.
 - [changed] - Made some python3 compatibility changes. 
+
+1.0.8 / 2017-08-04
+==================
+- [changed] - Refactored how we do pull and acknowledge messages to be more clear. 
+

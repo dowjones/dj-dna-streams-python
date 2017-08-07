@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='dj-dna-streaming-python',
-    version='1.0.7',
+    version='1.0.8',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
