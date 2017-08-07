@@ -1,5 +1,12 @@
+import errno
 import json
 import os
+
+# Python3 has FileNotFoundError defined. Python2 does not.
+try:
+    FileNotFoundError
+except NameError:
+    FileNotFoundError = IOError
 
 
 class Config(object):
@@ -24,7 +31,7 @@ class Config(object):
 
     def _validate(self):
         if not os.path.isfile(self.customer_config_path):
-            raise Exception('Encountered problem finding \'customer_config.json\' at path \'{}\'. Does it exist?'.format(self.customer_config_path))
+            raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), self.customer_config_path)
 
         if not os.access(self.customer_config_path, os.R_OK):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
