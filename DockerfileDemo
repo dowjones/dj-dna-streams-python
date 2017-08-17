@@ -1,0 +1,18 @@
+FROM python:2.7.10
+
+WORKDIR app
+
+ADD dnaStreaming ./dnaStreaming/
+COPY ./LICENSE ./LICENSE
+COPY ./MANIFEST.in ./MANIFEST.in
+COPY ./CHANGELOG.md ./CHANGELOG.md
+COPY ./requirements.txt ./requirements.txt
+COPY ./setup.py ./setup.py
+COPY ./tox.ini ./tox.ini
+COPY ./README.rst ./README.rst
+
+RUN ["pip", "install", "-r", "requirements.txt"]
+
+RUN ["python", "setup.py", "install"]
+
+CMD ["python", "./dnaStreaming/demo/show_stream.py", "-s"]
