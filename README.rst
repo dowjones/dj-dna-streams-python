@@ -166,10 +166,29 @@ Set the Configuration Variables
 
 Run the Demo Code
 
-    Execute the following at the project root:
 
-        .. code-block::
+    Running Non-Docker Demo:
 
-        python ./dnaStreaming/demo/show_stream.py -s
+        Execute the following at the project root:
 
-        .. code-block::
+            .. code-block::
+
+            python ./dnaStreaming/demo/show_stream.py -s
+
+            .. code-block::
+
+
+    Running Docker Demo
+
+        Execute the following at the project root:
+
+            .. code-block::
+
+            docker build -f ./DockerfileDemo -t dj-dna-streaming-python .
+
+            docker run -it \
+            -e SERVICE_ACCOUNT_ID="<your service account ID>" \
+            -e SUBSCRIPTION_ID="<your subscription ID>" \
+            dj-dna-streaming-python
+
+            .. code-block::
