@@ -63,3 +63,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 ==================
 - [changed] - Created a Dockerfile for demo purposes.
 - [docs] - Updated README.
+
+1.0.10 / 2017-08-22
+==================
+- [changed] - Dependency now pulls in entire GCloud library due to compatibility concerns. Will revert back to more focused dependency list in the future.
+- [changed] - Upgraded Google Cloud dependency version to fix incompatibility with Google language module in a related project.
+
