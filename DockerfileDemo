@@ -11,7 +11,7 @@ COPY ./setup.py ./setup.py
 COPY ./tox.ini ./tox.ini
 COPY ./README.rst ./README.rst
 
-RUN ["pip", "install", "-r", "requirements.txt"]
+RUN ["pip", "install", "--upgrade", "pip"]
 
 RUN ["python", "setup.py", "install"]
 
