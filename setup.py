@@ -19,8 +19,10 @@ setup(
     install_requires=[
         'google-api-python-client==1.6.2',
         'google-auth==1.0.2',
-        'google-cloud==0.27.0',
+        'google-cloud-core==0.25.0',
+        'google-cloud-pubsub==0.26.0',
         'mock==2.0.0',
+        'oauth2client==3.0.0',
         'requests==2.13.0'
     ]
 )
