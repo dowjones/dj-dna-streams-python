@@ -59,3 +59,18 @@ the subscription *and* consuming it. Instead they will just consume an already e
 ==================
 - [changed] - Refactored how we do pull and acknowledge messages to be more clear. 
 
+1.0.9 / 2017-08-17
+==================
+- [changed] - Created a Dockerfile for demo purposes.
+- [docs] - Updated README.
+
+1.0.10 / 2017-08-22
+==================
+- [changed] - Dependency now pulls in entire GCloud library due to compatibility concerns. Will revert back to more focused dependency list in the future.
+- [changed] - Upgraded Google Cloud dependency version to fix incompatibility with Google language module in a related project.
+
+1.0.11 / 2018-01-29
+==================
+- [changed] - Updated demo code to accept environment variable that, when used, reduces the output volume.
+- [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.  
+
