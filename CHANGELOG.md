@@ -72,5 +72,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 1.0.11 / 2018-01-29
 ==================
 - [changed] - Updated demo code to accept environment variable that, when used, reduces the output volume.
-- [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.  
+- [changed] - Removed maximum messages parameter in listen call. It was unnecessary.
+- [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.
+  
 
