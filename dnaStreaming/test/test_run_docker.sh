@@ -11,7 +11,7 @@ ${SUBSCRIPTION_ID:?"Need to set SUBSCRIPTION_ID environment variable."}
 ${ENV:?"Need to set ENV environment variable."}
 
 TIMEOUT=180 # NOTE: 2017-01-25: fleschec: In seconds
-NAME="dj-dna-streaming-javascript-asdvkds-for-testing-only"
+NAME="dj-dna-streaming-python-asdvkds-for-testing-only"
 
 shutdown() {
   # NOTE: 2017-01-28: fleschec: Use the ps utility to output the process group ID; look only for digits; trim spaces.
