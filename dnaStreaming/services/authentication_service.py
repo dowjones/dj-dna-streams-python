@@ -1,11 +1,5 @@
-import httplib2
-from oauth2client.service_account import ServiceAccountCredentials
-
-http = httplib2.Http()
+from google.oauth2 import service_account
 
 
 def get_authenticated_oauth_credentials(streaming_credentials):
-    service_account_cred = ServiceAccountCredentials.from_json_keyfile_dict(streaming_credentials)
-    service_account_cred.authorize(http)
-
-    return service_account_cred
+    return service_account.Credentials.from_service_account_info(streaming_credentials)
