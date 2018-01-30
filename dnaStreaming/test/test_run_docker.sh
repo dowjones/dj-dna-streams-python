@@ -13,17 +13,6 @@ ${ENV:?"Need to set ENV environment variable."}
 TIMEOUT=180 # NOTE: 2017-01-25: fleschec: In seconds
 NAME="dj-dna-streaming-python-asdvkds-for-testing-only"
 
-shutdown() {
-  # NOTE: 2017-01-28: fleschec: Use the ps utility to output the process group ID; look only for digits; trim spaces.
-  pgid="$( ps -o pgid "$pid" | grep [0-9] | tr -d ' ' )"
-  if [ ! -z "$pgid" ]
-  then
-    echo "Will attempt to kill PGID $pgid ..."
-    pkill -g $pgid
-  fi
-  exit $1
-}
-
 run_docker() {
   echo "Current directory: $(pwd)"
 
@@ -65,7 +54,7 @@ waitThen() {
       if [ "$ret" != "0" ]
       then
           echo "Test fails! Monitored pid ended. This means that the process appears to have ended prematurely."
-          shutdown 1
+          exit 1
           break
       fi
       sleep 5
@@ -81,7 +70,7 @@ waitThen() {
       then
         echo "Test successful! Timing out. Shutting down ...".
         $funcOnTimeout
-        shutdown 0
+        exit 0
         break
       fi
   done
