@@ -1,4 +1,5 @@
 import json
+import os
 from unittest import TestCase
 
 from dnaStreaming.config import Config
@@ -39,6 +40,45 @@ class TestCredentials(TestCase, PatchMixin):
         # Assert
         assert credentials
         assert credentials['type'] == 'service_account'
+
+    def test_get_headers_jwt(self):
+        # Arrange
+        config = Config()
+
+        fileFolder = os.path.dirname(os.path.realpath(__file__))
+        config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
+
+        jwt = "Bearer of Bad News"
+        fetch_jwt_mock = self.patch_module(credentials_service._fetch_jwt, jwt)
+
+        headers_expected = {
+            'Authorization': jwt
+        }
+
+        # Act
+        headers_actual = credentials_service._get_headers(config)
+
+        # Assert
+        assert headers_actual == headers_expected
+        fetch_jwt_mock.assert_called_once()
+
+    def test_get_headers_user_key(self):
+        # Arrange
+        user_key = "just some user key"
+        config = Config(user_key)
+
+        headers_expected = {
+            'user-key': user_key
+        }
+
+        fetch_jwt_mock = self.patch_module(credentials_service._fetch_jwt, '')
+
+        # Act
+        headers_actual = credentials_service._get_headers(config)
+
+        # Assert
+        assert headers_actual == headers_expected
+        fetch_jwt_mock.assert_not_called()
 
     def test_gc_auth(self):
         streaming_credentials_dict = json.loads(self.streaming_credentials_raw)
