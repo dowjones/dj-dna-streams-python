@@ -6,3 +6,6 @@
 /src/tests/DowJonesDNA.json
 r.sh
 /build
+
+dnaStreaming/logs
+.cache
