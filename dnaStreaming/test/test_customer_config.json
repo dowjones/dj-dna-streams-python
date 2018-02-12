@@ -1,4 +1,7 @@
 {
   "service_account_id": "foo",
-  "subscription_id": "bar"
+  "subscription_id": "bar",
+  "user_id": "bill",
+  "client_id": "nye",
+  "password": "the science guy"
 }
