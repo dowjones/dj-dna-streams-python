@@ -4,9 +4,18 @@ import requests
 
 
 def fetch_credentials(config):
-    response = _get_requests().get(config.credentials_uri(), headers=_get_headers(config))
+    headers = _get_headers(config)
+    response = _get_requests().get(config.credentials_uri(), headers=headers)
 
-    streaming_credentials_string = json.loads(response.text)['data']['attributes']['streaming_credentials']
+    if response.status_code == 401:
+        msg = '''Extraction API authentication failed for given credentials header:
+            {0}'''.format(headers)
+        raise Exception(msg)
+
+    try:
+        streaming_credentials_string = json.loads(response.text)['data']['attributes']['streaming_credentials']
+    except KeyError:
+        raise Exception("Unable to find streaming credentials for given account")
 
     return json.loads(streaming_credentials_string)
 
@@ -24,29 +33,40 @@ def _get_headers(config):
 
 def _fetch_jwt(config):
     oauth2_credentials = config.oauth2_credentials()
+    user_id = oauth2_credentials.get('user_id')
+    client_id = oauth2_credentials.get('client_id')
+    password = oauth2_credentials.get('password')
 
     # two requests need to be made, to the same URL, with slightly different params, to finally obtain a JWT
     # the second request contains params returned in the response of the first request
     # I know this makes no sense but it is what it is
     body = {
-        'username': oauth2_credentials['user_id'],
-        'client_id': oauth2_credentials['client_id'],
-        'password': oauth2_credentials['password'],
+        'username': user_id,
+        'client_id': client_id,
+        'password': password,
         'connection': 'service-account',
         'grant_type': 'password',
         'scope': 'openid service_account_id'
     }
 
     response = _get_requests().post(config.OAUTH_URL, data=body).json()
-    
+
     body['scope'] = 'openid pib'
     body['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
-    body['access_token'] = response['access_token']
-    body['assertion'] = response['id_token']
+    body['access_token'] = response.get('access_token')
+    body['assertion'] = response.get('id_token')
 
     response = _get_requests().post(config.OAUTH_URL, data=body).json()
 
-    return '{0} {1}'.format(response['token_type'], response['access_token'])
+    try:
+        return '{0} {1}'.format(response['token_type'], response['access_token'])
+    except KeyError:
+        msg = '''Unable to retrieve JWT with the given credentials:
+            User ID: {0}
+            Client ID: {1}
+            Password: {2}
+        '''.format(user_id, client_id, password)
+        raise Exception(msg)
 
 
 def _get_requests():
