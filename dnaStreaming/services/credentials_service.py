@@ -25,10 +25,19 @@ def _get_headers(config):
         return {
             'Authorization': _fetch_jwt(config)
         }
-    else:
+
+    # missing oauth creds, authenticate the old way via account ID
+    account_id = config.service_account_id()
+    if account_id:
         return {
-            'user-key': config.service_account_id()
+            'user-key': account_id
         }
+
+    # missing oauth creds and account ID, raise exception
+    msg = '''Missing credentials:
+        Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
+        (see README.rst)'''
+    raise Exception(msg)
 
 
 def _fetch_jwt(config):

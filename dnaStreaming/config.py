@@ -97,7 +97,7 @@ class Config(object):
         if not self.initialized:
             self._initialize()
 
-        return self.customer_config['service_account_id']
+        return self.customer_config.get('service_account_id')
 
     def subscription(self):
         if os.getenv(self.ENV_VAR_SUBSCRIPTION_ID) is not None:
