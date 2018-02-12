@@ -20,10 +20,13 @@ class Config(object):
     ENV_VAR_CLIENT_ID = 'CLIENT_ID'
     ENV_VAR_PASSWORD = 'PASSWORD'
 
-    def __init__(self, account_id=None):
+    def __init__(self, account_id=None, user_id=None, client_id=None, password=None):
         self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
         self.initialized = False
         self.account_id = account_id
+        self.user_id = user_id
+        self.client_id = client_id
+        self.password = password
 
     def _initialize(self):
         self._validate()
@@ -41,14 +44,20 @@ class Config(object):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
 
 
-    # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in env vars or config file
+    # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in the constructor, env vars or config file
     # otherwise return None (the client will have to authenticate Extraction API request with an account ID, i.e. the old way)
     def oauth2_credentials(self):
         creds = self._build_oauth2_credentials(
-            os.getenv(self.ENV_VAR_USER_ID), 
-            os.getenv(self.ENV_VAR_CLIENT_ID), 
-            os.getenv(self.ENV_VAR_PASSWORD)
+            self.user_id,
+            self.client_id,
+            self.password
         )
+        if not creds:
+            creds = self._build_oauth2_credentials(
+                os.getenv(self.ENV_VAR_USER_ID),
+                os.getenv(self.ENV_VAR_CLIENT_ID),
+                os.getenv(self.ENV_VAR_PASSWORD)
+            )
         if not creds:
             creds = self._oauth2_credentials_from_file()
         return creds
@@ -74,7 +83,6 @@ class Config(object):
 
 
     def service_account_id(self):
-        service_account_id = None
         if self.account_id is not None:
             service_account_id = self.account_id
         else:
@@ -92,8 +100,6 @@ class Config(object):
         return self.customer_config['service_account_id']
 
     def subscription(self):
-
-        subscription = None
         if os.getenv(self.ENV_VAR_SUBSCRIPTION_ID) is not None:
             subscription = os.getenv(self.ENV_VAR_SUBSCRIPTION_ID)
         else:

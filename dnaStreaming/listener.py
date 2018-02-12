@@ -10,8 +10,8 @@ from dnaStreaming import logger
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = -1
 
-    def __init__(self, service_account_id=None):
-        config = Config(service_account_id)
+    def __init__(self, service_account_id=None, user_id=None, client_id=None, password=None):
+        config = Config(service_account_id, user_id, client_id, password)
         self._initialize(config)
         self.current_subscription_index = 0
 

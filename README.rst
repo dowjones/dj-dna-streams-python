@@ -38,7 +38,20 @@ ___________
 
     3. Pass in variables as function arguments.
 
-        You may pass subscription ID as a parameter to the listen function like so:
+        You may pass your service account credentials (user_id, client_id, and password) to the Listener constructor like so:
+
+.. code-block::
+
+            from dnaStreaming.listener import Listener
+
+            listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
+
+            def callback(message, subscription_id):
+                print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
+                return True  # If desired return False to stop the message flow. This will unblock the process as well.
+
+            listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
+                    You may pass subscription ID as a parameter to the listen function like so:
 
 .. code-block::
 
