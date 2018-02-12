@@ -1,4 +1,6 @@
 {
-  "service_account_id": "",
+  "user_id": "",
+  "client_id": "",
+  "password": "",
   "subscription_id": ""
 }

@@ -21,11 +21,11 @@ git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-pyt
 Configuring
 ___________
 
-    To run this code, you need to provide both your 'service account ID' and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
+    To run this code, you need to provide both your service account credentials and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
 
     1. Set environment variables.
 
-        To set your service account ID, set an environment variable named 'SERVICE_ACCOUNT_ID' to your service account ID.
+        To set your service account credentials, set three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'
         To set your subscription IDS, set an environment variable named 'SUBSCRIPTION_IDS' to a comma delimited string like so:
 
             export SUBSCRIPTION_IDS="ABC1234567889, DEF9876543210"
@@ -34,29 +34,11 @@ ___________
 
     2. Using the configuration file.
 
-        In this codebase you will find a file named 'customer_config.json'. You are not required to use this file. If you prefer to use this configuration file, follow these directions: Open this file and add your service account ID. Then add your subscription IDs. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
+        In this codebase you will find a file named 'customer_config.json'. You are not required to use this file. If you prefer to use this configuration file, follow these directions: Open this file and add your service account credentials. Then add your subscription IDs. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
 
     3. Pass in variables as function arguments.
 
-        To pass in service_account_id as a parameter value, you may pass account ID to the Listener constructor like so:
-
-.. code-block::
-
-            from dnaStreaming.listener import Listener
-
-            listener = Listener(service_account_id='<YOUR ACCOUNT ID HERE>')
-
-            def callback(message, subscription_id):
-                print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
-                return True  # If desired return False to stop the message flow. This will unblock the process as well.
-
-            listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
-
-.. code-block::
-
-        Remember that passing account ID in this way will override the account ID environment variable and the config file setting.
-
-        To pass subscription IDs as a parameter, you may pass subscription ID like like so:
+        You may pass subscription ID as a parameter to the listen function like so:
 
 .. code-block::
 
