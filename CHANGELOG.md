@@ -69,8 +69,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Dependency now pulls in entire GCloud library due to compatibility concerns. Will revert back to more focused dependency list in the future.
 - [changed] - Upgraded Google Cloud dependency version to fix incompatibility with Google language module in a related project.
 
-1.1.0 / 2018-01-29
+1.1.0 / 2018-03-19
 ==================
+- [changed] - Updated authentication to use new service account flow (while still supporting old account ID flow for backwards compatibility)
 - [changed] - Updated demo code to accept environment variable that, when used, reduces the output volume.
 - [changed] - Removed maximum messages parameter in listen call. It was unnecessary.
 - [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.
