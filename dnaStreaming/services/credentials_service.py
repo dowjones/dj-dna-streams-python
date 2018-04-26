@@ -5,7 +5,7 @@ import requests
 
 def fetch_credentials(config):
     headers = _get_headers(config)
-    response = _get_requests().get(config.credentials_uri(), headers=headers)
+    response = _get_requests().get(config.credentials_uri(headers), headers=headers)
 
     if response.status_code == 401:
         msg = '''Extraction API authentication failed for given credentials header:
