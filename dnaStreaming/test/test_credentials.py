@@ -32,7 +32,7 @@ class TestCredentials(TestCase, PatchMixin):
 
         self.patch_module(credentials_service._get_requests, RequestsMock(response_expected))
 
-        config = Config()
+        config = Config("fakeaccountid")
 
         # Act
         credentials = credentials_service.fetch_credentials(config)
@@ -99,4 +99,5 @@ class RequestsMock(object):
 
 class ResponseMock(object):
     def __init__(self, text):
+        self.status_code = 200
         self.text = text

@@ -18,15 +18,27 @@ To use this we recommend 'pip installing' this by making the following addition 
 
 .. code-block::
 
+Auth
+-----------
+
+There are two ways to authenticate.
+
+Option 1. Service Account Id
+
+Option 2. UserId, ClientId and Password
+
+
 Configuring
 ___________
 
-To run this code, you need to provide both your service account credentials and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
+To run this code, you need to provide credentials from one of the authentication methods and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
 
 1. Set environment variables.
 ###################################################################
 
-To set your service account credentials, set three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'
+
+
+To set your service account credentials, set either 'SERVICE_ACCOUNT_ID' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
 To set your subscription IDS, set an environment variable named 'SUBSCRIPTION_IDS' to a comma delimited string like so:
 
 .. code-block::
@@ -50,6 +62,10 @@ You may pass your service account credentials (user_id, client_id, and password)
 .. code-block::
 
     from dnaStreaming.listener import Listener
+    #Service Account Id
+    listener = Listener(service_account_id=<YOUR SERVICE ACCOUNT ID>)
+    #or
+    #UserId, ClientId, Password
 
     listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
 
