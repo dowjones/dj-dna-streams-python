@@ -43,7 +43,7 @@ To set your subscription IDS, set an environment variable named 'SUBSCRIPTION_ID
 
 .. code-block::
 
-    export SUBSCRIPTION_IDS="ABC1234567889, DEF9876543210"
+    export SUBSCRIPTION_ID="ABC1234567889, DEF9876543210"
 
 .. code-block::
 
