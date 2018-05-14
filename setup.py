@@ -24,5 +24,9 @@ setup(
         'mock==2.0.0',
         'oauth2client==3.0.0',
         'requests==2.13.0'
+    ],
+    classifiers=[
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 3'
     ]
 )
