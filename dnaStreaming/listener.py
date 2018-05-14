@@ -1,3 +1,5 @@
+from __future__ import absolute_import, division, print_function
+
 import google
 
 from dnaStreaming.config import Config
