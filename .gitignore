@@ -3,6 +3,7 @@
 *.bak
 *.pyc
 .idea/*
+.vscode/*
 /src/tests/DowJonesDNA.json
 r.sh
 /build

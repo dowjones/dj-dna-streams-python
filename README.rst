@@ -39,11 +39,11 @@ To run this code, you need to provide credentials from one of the authentication
 
 
 To set your service account credentials, set either 'SERVICE_ACCOUNT_ID' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
-To set your subscription IDS, set an environment variable named 'SUBSCRIPTION_IDS' to a comma delimited string like so:
+To set your subscription IDS, set an environment variable named 'SUBSCRIPTION_ID' to a comma delimited string like so:
 
 .. code-block::
 
-    export SUBSCRIPTION_IDS="ABC1234567889, DEF9876543210"
+    export SUBSCRIPTION_ID="ABC1234567889, DEF9876543210"
 
 .. code-block::
 
