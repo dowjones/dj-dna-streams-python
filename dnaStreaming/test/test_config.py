@@ -24,7 +24,7 @@ class TestConfig(TestCase, PatchMixin):
         self.ensure_remove_environment_variable(Config.ENV_VAR_CREDENTIALS_URI)
         self.ensure_remove_environment_variable(Config.ENV_VAR_USER_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_CLIENT_ID)
-        self.ensure_remove_environment_variable(Config.ENV_VAR_PASSWORD)        
+        self.ensure_remove_environment_variable(Config.ENV_VAR_PASSWORD)
 
     def ensure_remove_environment_variable(self, key):
         if key in os.environ:
@@ -105,7 +105,7 @@ class TestConfig(TestCase, PatchMixin):
         creds = config.oauth2_credentials()
 
         # Assert
-        assert creds == None
+        assert creds is None
 
     def test_account_id_passed_success(self):
         # Arrange
