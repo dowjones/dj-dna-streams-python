@@ -46,7 +46,6 @@ class Config(object):
         if not os.access(self.customer_config_path, os.R_OK):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
 
-
     # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in the constructor, env vars or config file
     # otherwise return None (the client will have to authenticate Extraction API request with an account ID, i.e. the old way)
     def oauth2_credentials(self):
@@ -70,8 +69,8 @@ class Config(object):
             self._initialize()
 
         return self._build_oauth2_credentials(
-            self.customer_config.get('user_id'), 
-            self.customer_config.get('client_id'), 
+            self.customer_config.get('user_id'),
+            self.customer_config.get('client_id'),
             self.customer_config.get('password')
         )
 
@@ -83,7 +82,6 @@ class Config(object):
                 'password': password
             }
         return None
-
 
     def service_account_id(self):
         if self.account_id is not None:
@@ -125,5 +123,3 @@ class Config(object):
             return os.getenv(self.ENV_VAR_CREDENTIALS_URI, self.CRED_DNA_PROD_URI)
         else:
             return os.getenv(self.ENV_VAR_CREDENTIALS_URI, self.CRED_ALPHA_PROD_URI)
-
-

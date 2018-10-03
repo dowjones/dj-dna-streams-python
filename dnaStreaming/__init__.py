@@ -27,5 +27,3 @@ logger.addHandler(fileHandler)
 consoleHandler = logging.StreamHandler(sys.stdout)
 consoleHandler.setFormatter(logFormatter)
 logger.addHandler(consoleHandler)
-
-
