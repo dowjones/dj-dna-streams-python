@@ -4,7 +4,7 @@ import requests
 
 
 def fetch_credentials(config):
-    headers = _get_headers(config)
+    headers = get_authentication_headers(config)
     response = _get_requests().get(config.credentials_uri(), headers=headers)
 
     if response.status_code == 401:
@@ -20,7 +20,7 @@ def fetch_credentials(config):
     return json.loads(streaming_credentials_string)
 
 
-def _get_headers(config):
+def get_authentication_headers(config):
     if config.oauth2_credentials():
         return {
             'Authorization': _fetch_jwt(config)
