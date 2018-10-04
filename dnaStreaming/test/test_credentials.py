@@ -56,7 +56,7 @@ class TestCredentials(TestCase, PatchMixin):
         }
 
         # Act
-        headers_actual = credentials_service._get_headers(config)
+        headers_actual = credentials_service.get_authentication_headers(config)
 
         # Assert
         assert headers_actual == headers_expected
@@ -74,7 +74,7 @@ class TestCredentials(TestCase, PatchMixin):
         fetch_jwt_mock = self.patch_module(credentials_service._fetch_jwt, '')
 
         # Act
-        headers_actual = credentials_service._get_headers(config)
+        headers_actual = credentials_service.get_authentication_headers(config)
 
         # Assert
         assert headers_actual == headers_expected
