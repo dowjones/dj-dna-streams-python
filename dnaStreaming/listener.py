@@ -6,8 +6,9 @@ from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service
 import time
 import sys
+import requests
 from dnaStreaming import logger
-
+from dnaStreaming.services import credentials_service
 
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = -1
@@ -20,15 +21,24 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
+    def _is_exceeded(self, subscription_id):
+        stream_url = self.config.streams_uri() + '/' + "-".join(subscription_id.split("-")[:4])
+        r = requests.get(stream_url, headers=credentials_service.get_authentication_headers(self.config))
+        if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+            return True
+        return False
+
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id=None):
         limit_pull_calls = not (maximum_messages == self.DEFAULT_UNLIMITED_MESSAGES)
         pubsub_client = pubsub_service.get_client(self.config)
-
         subscription_id = subscription_id if subscription_id is not None else self.config.subscription()
 
         if subscription_id is None or subscription_id.strip() == '':
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
+
+        if self._is_exceeded(subscription_id):
+            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
 
         subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 
