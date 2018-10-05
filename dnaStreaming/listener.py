@@ -22,7 +22,7 @@ class Listener(object):
         pubsub_client = pubsub_service.get_client(self.config)
 
         subscription_id = subscription_id or self.config.subscription()
-        if not subscription_id.strip():
+        if not subscription_id:
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
@@ -40,10 +40,8 @@ class Listener(object):
                     for message in results.received_messages:
                         callback_result = on_message_callback(message.message, subscription_id)
                         pubsub_client.acknowledge(subscription_path, [message.ack_id])
-                        if not callback_result:
-                            break
                         count += 1
-                        if maximum_messages is not None and count >= maximum_messages:
+                        if not callback_result:
                             return
 
             except Exception as e:
@@ -61,7 +59,7 @@ class Listener(object):
 
         subscription_id = subscription_id or self.config.subscription()
 
-        if not subscription_id.strip():
+        if not subscription_id:
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
