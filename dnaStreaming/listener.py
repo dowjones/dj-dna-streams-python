@@ -21,6 +21,13 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
+    def _is_exceeded(self, subscription_id):
+        stream_url = self.config.streams_uri() + '/' + "-".join(subscription_id.split("-")[:4])
+        r = requests.get(stream_url, headers=credentials_service.get_authentication_headers(self.config))
+        if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+            return True
+        return False
+
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id=None):
         limit_pull_calls = not (maximum_messages == self.DEFAULT_UNLIMITED_MESSAGES)
         pubsub_client = pubsub_service.get_client(self.config)
@@ -30,10 +37,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        streams_id = "-".join(subscription_id.split("-")[:4])
-        stream_url = self.config.streams_uri() + '/' + streams_id
-        r = requests.get(stream_url, headers=credentials_service.get_authentication_headers(self.config))
-        if r.json()['data']['attributes']['job_status'] == "EXCEEDED":
+        if self._is_exceeded(subscription_id):
             return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
 
         subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
