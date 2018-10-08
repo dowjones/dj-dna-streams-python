@@ -33,7 +33,7 @@ To run this code, you need to provide credentials from one of the authentication
 
 
 To set your service account credentials, set either 'SERVICE_ACCOUNT_ID' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
-To set your subscription IS, simply set an environment variable named 'SUBSCRIPTION_ID' like so:
+To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
 .. code-block::
 
@@ -63,16 +63,10 @@ You may pass your service account credentials (user_id, client_id, and password)
 
     listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
 
-    def callback(message, subscription_id):
-        print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
-        return True  # If desired return False to stop the message flow. This will unblock the process as well.
-
-    listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
-            You may pass subscription ID as a parameter to the listen function like so:
-
 .. code-block::
 
-You may pass your subcription ID as a parameter to the listen function like so:
+Or you may use the environment variables.
+Remember that passing credentials and subscription ID(s) in this way will override the environment variable and the config file settings.
 
 .. code-block::
 
@@ -80,16 +74,41 @@ You may pass your subcription ID as a parameter to the listen function like so:
 
     listener = Listener()
 
+.. code-block::
+
+
+4. Listening to messages
+###################################################################
+
+You may want to listen messages synchronously like so:
+.. code-block::
+
     def callback(message, subscription_id):
         print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
         return True  # If desired return False to stop the message flow. This will unblock the process as well.
 
-    listener.listen(callback, maximum_messages=10, subscription_id='<YOUR SUBSCRIPTION ID HERE>')  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
+    listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
+    # You may pass subscription ID as a parameter to the listen function
 
 .. code-block::
 
-Remember that passing credentials and subscription ID(s) in this way will override the environment variable and the config file settings.
+You may want to listen messages asynchronously like so:
+.. code-block::
 
+    def callback(message, subscription_id):
+        print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
+
+    future = listener.listen_async(callback)
+    # After calling `listed_async` you need to keep the main thread alive.
+
+    for count in range(0, 5):
+        sleep(1)
+
+    # Stop receiving messages after 5 seconds
+    if future.running():
+        future.cancel()
+
+.. code-block::
 Log Files
 _________
 
@@ -191,6 +210,14 @@ Execute the following at the project root:
 .. code-block::
 
     python ./dnaStreaming/demo/show_stream.py -s
+
+.. code-block::
+
+Or
+
+.. code-block::
+
+    python ./dnaStreaming/demo/show_stream_async.py -s
 
 .. code-block::
 
