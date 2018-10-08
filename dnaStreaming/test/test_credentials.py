@@ -87,8 +87,8 @@ class TestCredentials(TestCase, PatchMixin):
 
         credentials = authentication_service.get_authenticated_oauth_credentials(streaming_credentials_dict)
 
-        from google.cloud import pubsub
-        pubsub.Client(project=streaming_credentials_dict['project_id'], credentials=credentials)
+        from google.cloud import pubsub_v1
+        pubsub_v1.SubscriberClient(credentials=credentials)
 
 
 class RequestsMock(object):
