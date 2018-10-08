@@ -38,7 +38,8 @@ class Listener(object):
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
 
         if self._is_exceeded(subscription_id):
-            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
+            raise Exception(
+                "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
 
         logger.info('Listeners for subscriptions have been configured, set and await message arrival.')
 
