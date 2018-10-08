@@ -38,7 +38,8 @@ class Listener(object):
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
         if self._is_exceeded(subscription_id):
-            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
+            raise Exception(
+                "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
 
         subscription = google.cloud.pubsub.subscription.Subscription(subscription_id, client=pubsub_client)
 

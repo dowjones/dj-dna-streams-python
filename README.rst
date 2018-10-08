@@ -211,5 +211,3 @@ Execute the following at the project root:
     dj-dna-streaming-python
 
 .. code-block::
-=======
-Please use the https://github.com/dowjones/dj-dna-streams-python instead.
