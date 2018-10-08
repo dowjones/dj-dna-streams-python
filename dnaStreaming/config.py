@@ -15,10 +15,12 @@ class Config(object):
     OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'
     CRED_ALPHA_PROD_URI = 'https://api.dowjones.com/alpha/accounts/streaming-credentials'
     CRED_DNA_PROD_URI = 'https://api.dowjones.com/dna/accounts/streaming-credentials'
+
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
     ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
     ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
     ENV_VAR_CREDENTIALS_URI = 'CREDENTIALS_URI'
+    ENV_VAR_STREAMS_URI = 'STREAMS_URI'
     ENV_VAR_USER_ID = 'USER_ID'
     ENV_VAR_CLIENT_ID = 'CLIENT_ID'
     ENV_VAR_PASSWORD = 'PASSWORD'
