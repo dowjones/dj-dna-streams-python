@@ -2,6 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import time
 import requests
+from google.api_core.exceptions import GoogleAPICallError, NotFound
 
 from dnaStreaming import logger
 from dnaStreaming.config import Config
@@ -56,7 +57,9 @@ class Listener(object):
                         if not callback_result:
                             return
 
-            except Exception as e:
+            except GoogleAPICallError as e:
+                if isinstance(e, NotFound):
+                    raise e
                 logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
                 logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
                 time.sleep(10)
