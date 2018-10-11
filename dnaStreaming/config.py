@@ -5,6 +5,8 @@ import json
 import os
 
 # Python3 has FileNotFoundError defined. Python2 does not.
+from dnaStreaming.services.credentials_service import get_authentication_headers
+
 try:
     FileNotFoundError
 except NameError:
@@ -13,8 +15,7 @@ except NameError:
 
 class Config(object):
     OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'
-    CRED_ALPHA_PROD_URI = 'https://api.dowjones.com/alpha/accounts/streaming-credentials'
-    CRED_DNA_PROD_URI = 'https://api.dowjones.com/dna/accounts/streaming-credentials'
+    BASE_PROD_URI = 'https://api.dowjones.com'
 
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
     ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
@@ -33,11 +34,18 @@ class Config(object):
         self.client_id = client_id
         self.password = password
 
+        self.headers = None
+        self.cred_uri = None
+        self.streams_uri = None
+        self._set_request_params()
+
     def _initialize(self):
         self._validate()
 
         with open(self.customer_config_path, 'r') as f:
             self.customer_config = json.load(f)
+
+        self._set_request_params()
 
         self.initialized = True
 
@@ -47,6 +55,22 @@ class Config(object):
 
         if not os.access(self.customer_config_path, os.R_OK):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
+
+    def _set_request_params(self):
+        self.headers = get_authentication_headers(self)
+
+        if "Authorization" in self.headers:
+            self.cred_uri = self.BASE_PROD_URI + '/dna/accounts/streaming-credentials'
+            self.streams_uri = self.BASE_PROD_URI + '/dna/streams'
+        elif 'user-key' in self.headers:
+            self.cred_uri = self.BASE_PROD_URI + '/alpha/accounts/streaming-credentials'
+            self.streams_uri = self.BASE_PROD_URI + '/alpha/streams'
+        else:
+            msg = '''Could not determine credential headers:
+                Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
+                (see README.rst)'''
+            raise Exception(msg)
+
 
     # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in the constructor, env vars or config file
     # otherwise return None (the client will have to authenticate Extraction API request with an account ID, i.e. the old way)

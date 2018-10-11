@@ -20,11 +20,14 @@ class Listener(object):
         self.config = config
 
     def _is_exceeded(self, subscription_id):
-        stream_url = self.config.streams_uri() + '/' + "-".join(subscription_id.split("-")[:4])
-        r = requests.get(stream_url, headers=credentials_service.get_authentication_headers(self.config))
-        if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-            return True
-        return False
+        stream_id_uri = self.config.streams_uri + '/' + subscription_id
+        r = requests.get(stream_id_uri, headers=self.config.headers)
+        try:
+            if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                return True
+            return False
+        except KeyError:
+            raise Exception("Unable to request data from your stream id")
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
         pubsub_client = pubsub_service.get_client(self.config)
@@ -34,12 +37,12 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        streaming_credentials = credentials_service.fetch_credentials(self.config)
-        subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
-
         if self._is_exceeded(subscription_id):
             raise Exception(
                 "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
+
+        streaming_credentials = credentials_service.fetch_credentials(self.config)
+        subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
 
         logger.info('Listeners for subscriptions have been configured, set and await message arrival.')
 
@@ -77,7 +80,8 @@ class Listener(object):
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
         if self._is_exceeded(subscription_id):
-            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
+            raise Exception(
+                "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)

@@ -1,17 +1,15 @@
 from __future__ import absolute_import, division, print_function
 
 import json
-
 import requests
 
 
 def fetch_credentials(config):
-    headers = get_authentication_headers(config)
-    response = _get_requests().get(config.credentials_uri(), headers=headers)
+    response = _get_requests().get(config.cred_uri, headers=config.headers)
 
     if response.status_code == 401:
         msg = '''Extraction API authentication failed for given credentials header:
-            {0}'''.format(headers)
+            {0}'''.format(config.headers)
         raise Exception(msg)
 
     try:
