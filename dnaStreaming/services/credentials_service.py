@@ -5,7 +5,8 @@ import requests
 
 
 def fetch_credentials(config):
-    response = _get_requests().get(config.cred_uri, headers=config.headers)
+    response = _get_requests().get(config.get_uri_context() + '/accounts/streaming-credentials',
+                                   headers=config.get_headers())
 
     if response.status_code == 401:
         msg = '''Extraction API authentication failed for given credentials header:
@@ -33,11 +34,11 @@ def get_authentication_headers(config):
             'user-key': account_id
         }
 
-    # missing oauth creds and account ID, raise exception
-    msg = '''Missing credentials:
-        Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
-        (see README.rst)'''
-    raise Exception(msg)
+    else:
+        msg = '''Could not find determine credentials:
+            Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
+            (see README.rst)'''
+        raise Exception(msg)
 
 
 def _fetch_jwt(config):

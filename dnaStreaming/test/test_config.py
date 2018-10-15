@@ -92,7 +92,6 @@ class TestConfig(TestCase, PatchMixin):
         assert os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] == config.service_account_id()
         subscription_id = config.subscription()
         assert subscription_id == 'ABC'
-        assert os.environ[Config.ENV_VAR_CREDENTIALS_URI] == config.credentials_uri(dict())
         assert os.environ[Config.ENV_VAR_USER_ID] == config.oauth2_credentials().get('user_id')
         assert os.environ[Config.ENV_VAR_CLIENT_ID] == config.oauth2_credentials().get('client_id')
         assert os.environ[Config.ENV_VAR_PASSWORD] == config.oauth2_credentials().get('password')
