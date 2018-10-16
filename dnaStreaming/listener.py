@@ -38,7 +38,8 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        t = threading.Timer(10.0, self._report_exceeded, [subscription_id])
+        t = threading.Timer(300.0, self._report_exceeded, [subscription_id])
+        t.start()
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
@@ -78,7 +79,8 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        t = threading.Timer(10.0, self._report_exceeded, [subscription_id])
+        t = threading.Timer(300.0, self._report_exceeded, [subscription_id])
+        t.start()
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
