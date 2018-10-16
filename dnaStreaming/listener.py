@@ -20,7 +20,8 @@ class Listener(object):
         self.config = config
 
     def _is_exceeded(self, subscription_id):
-        stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:5])
+        stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:-2])
+
         r = requests.get(stream_id_uri, headers=self.config.get_headers())
 
         try:
