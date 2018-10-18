@@ -28,7 +28,7 @@ run_docker() {
   --name=$NAME \
   -e USER_KEY=$USER_KEY \
   -e SUBSCRIPTION_ID=$SUBSCRIPTION_ID \
-  -e CREDENTIALS_URI="https://extraction-api-dot-djsyndicationhub-$ENV.appspot.com/alpha/accounts/streaming-credentials" \
+  -e EXTRACTION_API_HOST="https://extraction-api-dot-djsyndicationhub-$ENV.appspot.com" \
   -e QUIET_DEMO=true \
   $NAME-tag
 }
