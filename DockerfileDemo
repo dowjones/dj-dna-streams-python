@@ -11,8 +11,7 @@ COPY ./setup.py ./setup.py
 COPY ./tox.ini ./tox.ini
 COPY ./README.rst ./README.rst
 
-RUN ["pip", "install", "--upgrade", "pip"]
-
+RUN ["pip", "install", "--upgrade", "pip", "setuptools", "wheel"]
 RUN ["python", "setup.py", "install"]
 
 CMD ["python", "./dnaStreaming/demo/show_stream.py", "-s"]
