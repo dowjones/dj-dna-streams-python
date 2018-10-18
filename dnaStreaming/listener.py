@@ -3,10 +3,12 @@ from __future__ import absolute_import, division, print_function
 import time
 import requests
 from google.api_core.exceptions import GoogleAPICallError, NotFound
+from threading import Thread
 
 from dnaStreaming import logger
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service, credentials_service
+
 
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = None
@@ -19,17 +21,24 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def _is_exceeded(self, subscription_id):
-        stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:-2])
+    def _check_exceeded_thread(self, subscription_id):
+        while True:
+            stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:-2])
 
-        r = requests.get(stream_id_uri, headers=self.config.get_headers())
+            r = requests.get(stream_id_uri, headers=self.config.get_headers())
 
-        try:
-            if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-                return True
-            return False
-        except KeyError:
-            raise Exception("Unable to request data from your stream id")
+            try:
+                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                    # change this message
+                    logger.error("Doc exceeded")
+
+            except KeyError:
+                logger.error('OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account. As such, no new documents will be added to your stream\'s queue. However, you won\'t lose access to any documents that have already been added to the queue. These will continue to be streamed to you.')
+            time.sleep(5 * 60)
+
+    def check_exceeded(self, subscription_id):
+        thread = Thread(target=self._check_exceeded_thread, args=[subscription_id])
+        thread.start()
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
         pubsub_client = pubsub_service.get_client(self.config)
@@ -39,9 +48,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        if self._is_exceeded(subscription_id):
-            raise Exception(
-                "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
+        self.check_exceeded(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
@@ -83,9 +90,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        if self._is_exceeded(subscription_id):
-            raise Exception(
-                "Your article limit has been exceeded. Please contact your customer service representitive for more information.")
+        self.check_exceeded(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)

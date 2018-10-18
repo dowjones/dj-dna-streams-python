@@ -155,6 +155,5 @@ class TestConfig(TestCase, PatchMixin):
         fetch_jwt_mock.assert_not_called()
 
 
-
 if __name__ == '__main__' and __package__ is None:
     unittest.main()
