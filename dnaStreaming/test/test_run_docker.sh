@@ -2,11 +2,11 @@
 
 # NOTE: 2017-01-28: fleschec: Run this only if advised by Dow Jones Data Engineering support.
 
-SERVICE_ACCOUNT_ID=$1
+USER_KEY=$1
 SUBSCRIPTION_ID=$2
 ENV=$3
 
-${SERVICE_ACCOUNT_ID:?"Need to set SERVICE_ACCOUNT_ID environment variable."}
+${USER_KEY:?"Need to set USER_KEY environment variable."}
 ${SUBSCRIPTION_ID:?"Need to set SUBSCRIPTION_ID environment variable."}
 ${ENV:?"Need to set ENV environment variable."}
 
@@ -26,7 +26,7 @@ run_docker() {
 
   docker run \
   --name=$NAME \
-  -e SERVICE_ACCOUNT_ID=$SERVICE_ACCOUNT_ID \
+  -e USER_KEY=$USER_KEY \
   -e SUBSCRIPTION_ID=$SUBSCRIPTION_ID \
   -e CREDENTIALS_URI="https://extraction-api-dot-djsyndicationhub-$ENV.appspot.com/alpha/accounts/streaming-credentials" \
   -e QUIET_DEMO=true \
