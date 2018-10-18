@@ -2,7 +2,7 @@ from __future__ import absolute_import, division, print_function
 
 import time
 import requests
-import threading
+from threading import Thread
 
 from dnaStreaming import logger
 from dnaStreaming.config import Config
@@ -20,15 +20,24 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def _report_exceeded(self, subscription_id):
-        stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:5])
-        r = requests.get(stream_id_uri, headers=self.config.get_headers())
+    def _check_exceeded_thread(self, subscription_id):
+        while True:
+            stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:-2])
 
-        try:
-            if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-                print('Warning: Your article limit has been exceeded. Please contact your customer service representitive for more information.')
-        except KeyError:
-            raise Exception("Unable to request data from your stream id")
+            r = requests.get(stream_id_uri, headers=self.config.get_headers())
+
+            try:
+                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                    # change this message
+                    logger.error("Doc exceeded")
+
+            except KeyError:
+                logger.error("Unable to request data from your stream id")
+            time.sleep(5 * 60)
+
+    def check_exceeded(self, subscription_id):
+        thread = Thread(target=self._check_exceeded_thread, args=[subscription_id])
+        thread.start()
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
         pubsub_client = pubsub_service.get_client(self.config)
@@ -38,8 +47,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        t = threading.Timer(300.0, self._report_exceeded, [subscription_id])
-        t.start()
+        self.check_exceeded(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
@@ -79,8 +87,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        t = threading.Timer(300.0, self._report_exceeded, [subscription_id])
-        t.start()
+        self.check_exceeded(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
