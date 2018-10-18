@@ -7,7 +7,6 @@ from dnaStreaming import logger
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service, credentials_service
 
-
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = None
 
