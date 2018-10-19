@@ -28,12 +28,14 @@ class Listener(object):
             r = requests.get(stream_id_uri, headers=self.config.get_headers())
 
             try:
-                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                if not r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
                     # change this message
-                    logger.error("Doc exceeded")
+                    logger.error(
+                        'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account. As such, no new documents will be added to your stream\'s queue. However, you won\'t lose access to any documents that have already been added to the queue. These will continue to be streamed to you.')
 
             except KeyError:
-                logger.error('OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account. As such, no new documents will be added to your stream\'s queue. However, you won\'t lose access to any documents that have already been added to the queue. These will continue to be streamed to you.')
+                raise Exception(
+                    "Unable to request data from your stream subscription id")
             time.sleep(5 * 60)
 
     def check_exceeded(self, subscription_id):
