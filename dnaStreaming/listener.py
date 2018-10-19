@@ -22,21 +22,35 @@ class Listener(object):
         self.config = config
 
     def _check_exceeded_thread(self, subscription_id):
+        host = self.config.get_uri_context()
+        headers = self.config.get_headers()
         while True:
-            stream_id_uri = self.config.get_uri_context() + '/streams/' + "-".join(subscription_id.split("-")[:-2])
+            stream_id_uri = host + '/streams/' + "-".join(subscription_id.split("-")[:-2])
 
-            r = requests.get(stream_id_uri, headers=self.config.get_headers())
+            r = requests.get(stream_id_uri, headers=headers)
 
             try:
                 if not r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-                    # change this message
+                    if "Authorization" in headers:
+                        limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
+                    else:
+                        limits_uri = host + '/accounts/' + self.config.get_user_key()
+                    total_msg = 'NA'
+                    limit_msg = 'NA'
+                    try:
+                        lr = requests.get(limits_uri, headers=headers)
+                        total_msg = lr.json()['data']['attributes']['tot_extracts']
+                        limit_msg = lr.json()['data']['attributes']['max_allowed_extracts']
+                    except KeyError:
+                        logger.error('Could not parse account limit request response.')
                     logger.error(
-                        'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account. As such, no new documents will be added to your stream\'s queue. However, you won\'t lose access to any documents that have already been added to the queue. These will continue to be streamed to you.')
+                        'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account ({}/{}). As such, no new documents will be added to your stream\'s queue. However, you won\'t lose access to any documents that have already been added to the queue. These will continue to be streamed to you.'
+                        .format(total_msg, limit_msg))
 
             except KeyError:
                 raise Exception(
                     "Unable to request data from your stream subscription id")
-            time.sleep(5 * 60)
+            time.sleep(1)
 
     def check_exceeded(self, subscription_id):
         thread = Thread(target=self._check_exceeded_thread, args=[subscription_id])
