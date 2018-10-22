@@ -21,7 +21,7 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def _check_exceeded_thread(self, subscription_id):
+    def _check_exceeded(self, subscription_id):
         host = self.config.get_uri_context()
         headers = self.config.get_headers()
         while True:
@@ -30,7 +30,7 @@ class Listener(object):
             r = requests.get(stream_id_uri, headers=headers)
 
             try:
-                if not r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
                     if "Authorization" in headers:
                         limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
                     else:
@@ -50,10 +50,10 @@ class Listener(object):
             except KeyError:
                 raise Exception(
                     "Unable to request data from your stream subscription id")
-            time.sleep(1)
+            time.sleep(5 * 60)
 
-    def check_exceeded(self, subscription_id):
-        thread = Thread(target=self._check_exceeded_thread, args=[subscription_id])
+    def check_exceeded_thread(self, subscription_id):
+        thread = Thread(target=self._check_exceeded, args=[subscription_id])
         thread.start()
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
@@ -64,7 +64,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        self.check_exceeded(subscription_id)
+        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
@@ -106,7 +106,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        self.check_exceeded(subscription_id)
+        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)

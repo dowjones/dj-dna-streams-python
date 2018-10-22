@@ -95,18 +95,18 @@ class Config(object):
             'scope': 'openid service_account_id'
         }
 
-        response = _get_requests().post(self.OAUTH_URL, data=body).json()
-
-        body['scope'] = 'openid pib'
-        body['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
-        body['access_token'] = response.get('access_token')
-        body['assertion'] = response.get('id_token')
-
-        response = _get_requests().post(self.OAUTH_URL, data=body).json()
-
         try:
+
+            response = _get_requests().post(self.OAUTH_URL, data=body).json()
+            body['scope'] = 'openid pib'
+            body['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+            body['access_token'] = response.get('access_token')
+            body['assertion'] = response.get('id_token')
+
+            response = _get_requests().post(self.OAUTH_URL, data=body).json()
+
             return '{0} {1}'.format(response['token_type'], response['access_token'])
-        except KeyError:
+        except (KeyError, ValueError):
             msg = '''Unable to retrieve JWT with the given credentials:
                 User ID: {0}
                 Client ID: {1}
