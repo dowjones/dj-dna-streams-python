@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='dj-dna-streaming-python',
-    version='1.1.0',
+    version='1.1.1',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
@@ -17,13 +17,13 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        'google-api-python-client==1.6.2',
+        'googleapis-common-protos==1.5.3',
         'google-auth==1.0.2',
-        'google-cloud-core==0.25.0',
-        'google-cloud-pubsub==0.26.0',
+        'google-cloud-pubsub==0.38.0',
+        'google-cloud-core==0.28.1',
         'mock==2.0.0',
         'oauth2client==3.0.0',
-        'requests==2.13.0'
+        'requests==2.18.4'
     ],
     classifiers=[
         'Programming Language :: Python :: 2',

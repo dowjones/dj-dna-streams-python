@@ -19,9 +19,9 @@ class TestConfig(TestCase, PatchMixin):
         self.patch_module(os.access, True)
 
     def tearDown(self):
-        self.ensure_remove_environment_variable(Config.ENV_VAR_SERVICE_ACCOUNT_ID)
+        self.ensure_remove_environment_variable(Config.ENV_VAR_USER_KEY)
         self.ensure_remove_environment_variable(Config.ENV_VAR_SUBSCRIPTION_ID)
-        self.ensure_remove_environment_variable(Config.ENV_VAR_CREDENTIALS_URI)
+        self.ensure_remove_environment_variable(Config.ENV_VAR_EXTRACTION_API_HOST)
         self.ensure_remove_environment_variable(Config.ENV_VAR_USER_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_CLIENT_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_PASSWORD)
@@ -62,12 +62,12 @@ class TestConfig(TestCase, PatchMixin):
         config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
 
         # Act
-        service_account_id = config.service_account_id()
+        user_key = config.get_user_key()
         subscription = config.subscription()
         oauth2_credentials = config.oauth2_credentials()
 
         # Assert
-        assert service_account_id
+        assert user_key
         assert subscription == 'bar'
         assert oauth2_credentials.get('user_id')
         assert oauth2_credentials.get('password')
@@ -75,9 +75,9 @@ class TestConfig(TestCase, PatchMixin):
 
     def test_environment_variables_success(self):
         # Arrange
-        os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] = '123'
+        os.environ[Config.ENV_VAR_USER_KEY] = '123'
         os.environ[Config.ENV_VAR_SUBSCRIPTION_ID] = 'ABC'
-        os.environ[Config.ENV_VAR_CREDENTIALS_URI] = 'http://hiptotherythum.com'
+        os.environ[Config.ENV_VAR_EXTRACTION_API_HOST] = 'http://hiptotherythum.com'
         os.environ[Config.ENV_VAR_USER_ID] = 'user'
         os.environ[Config.ENV_VAR_CLIENT_ID] = 'client'
         os.environ[Config.ENV_VAR_PASSWORD] = 'password'
@@ -89,10 +89,9 @@ class TestConfig(TestCase, PatchMixin):
         config._initialize()
 
         # Assert
-        assert os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] == config.service_account_id()
+        assert os.environ[Config.ENV_VAR_USER_KEY] == config.get_user_key()
         subscription_id = config.subscription()
         assert subscription_id == 'ABC'
-        assert os.environ[Config.ENV_VAR_CREDENTIALS_URI] == config.credentials_uri(dict())
         assert os.environ[Config.ENV_VAR_USER_ID] == config.oauth2_credentials().get('user_id')
         assert os.environ[Config.ENV_VAR_CLIENT_ID] == config.oauth2_credentials().get('client_id')
         assert os.environ[Config.ENV_VAR_PASSWORD] == config.oauth2_credentials().get('password')
@@ -107,14 +106,53 @@ class TestConfig(TestCase, PatchMixin):
         # Assert
         assert creds is None
 
-    def test_account_id_passed_success(self):
+    def test_user_key_passed_success(self):
         # Arrange
         # Act
-        config = Config(account_id='123')
+        config = Config(user_key='123')
 
         # Assert
-        print(config.service_account_id())
-        assert config.service_account_id() == '123'
+        print(config.get_user_key())
+        assert config.get_user_key() == '123'
+
+    def test_get_headers_jwt(self):
+        # Arrange
+        config = Config()
+
+        fileFolder = os.path.dirname(os.path.realpath(__file__))
+        config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
+
+        jwt = "Bearer of Bad News"
+        fetch_jwt_mock = self.patch_module(config._fetch_jwt, jwt)
+
+        headers_expected = {
+            'Authorization': jwt
+        }
+
+        # Act
+        headers_actual = config.get_authentication_headers()
+
+        # Assert
+        assert headers_actual == headers_expected
+        fetch_jwt_mock.assert_called_once()
+
+    def test_get_headers_user_key(self):
+        # Arrange
+        user_key = "just some user key"
+        config = Config(user_key)
+
+        headers_expected = {
+            'user-key': user_key
+        }
+
+        fetch_jwt_mock = self.patch_module(config._fetch_jwt, '')
+
+        # Act
+        headers_actual = config.get_authentication_headers()
+
+        # Assert
+        assert headers_actual == headers_expected
+        fetch_jwt_mock.assert_not_called()
 
 
 if __name__ == '__main__' and __package__ is None:

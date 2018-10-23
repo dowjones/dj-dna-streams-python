@@ -2,6 +2,8 @@ from __future__ import absolute_import, division, print_function
 
 import time
 import requests
+from google.api_core.exceptions import GoogleAPICallError, NotFound
+from threading import Thread
 
 from dnaStreaming import logger
 from dnaStreaming.config import Config
@@ -19,12 +21,42 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def _is_exceeded(self, subscription_id):
-        stream_url = self.config.streams_uri() + '/' + "-".join(subscription_id.split("-")[:4])
-        r = requests.get(stream_url, headers=credentials_service.get_authentication_headers(self.config))
-        if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-            return True
-        return False
+    def _check_exceeded(self, subscription_id):
+        host = self.config.get_uri_context()
+        headers = self.config.get_headers()
+        while True:
+            stream_id_uri = host + '/streams/' + "-".join(subscription_id.split("-")[:-2])
+
+            r = requests.get(stream_id_uri, headers=headers)
+
+            try:
+                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
+                    if "Authorization" in headers:
+                        limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
+                    else:
+                        limits_uri = host + '/accounts/' + self.config.get_user_key()
+                    total_msg = 'NA'
+                    limit_msg = 'NA'
+                    try:
+                        lr = requests.get(limits_uri, headers=headers)
+                        limit_msg = lr.json()['data']['attributes']['max_allowed_extracts']
+                    except KeyError:
+                        logger.error('Could not parse account limit request response.')
+                    logger.error(
+                        'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account ' +
+                        '({}). As such, no new documents will be added to your stream\'s queue. However, you won\'t ' +
+                        'lose access to any documents that have already been added to the queue. These will continue ' +
+                        'to be streamed to you. Contact your account administrator with any questions or to upgrade ' +
+                        'your account limits.'.format(limit_msg))
+
+            except KeyError:
+                raise Exception(
+                    "Unable to request data from your stream subscription id")
+            time.sleep(5 * 60)
+
+    def check_exceeded_thread(self, subscription_id):
+        thread = Thread(target=self._check_exceeded, args=[subscription_id])
+        thread.start()
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
         pubsub_client = pubsub_service.get_client(self.config)
@@ -32,13 +64,13 @@ class Listener(object):
         subscription_id = subscription_id or self.config.subscription()
         if not subscription_id:
             raise Exception(
-                'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
+                'No subscription specified. You must specify the subscription ID either through an environment ' +
+                'variable, a config file or by passing the value to the method.')
+
+        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
-
-        if self._is_exceeded(subscription_id):
-            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
 
         logger.info('Listeners for subscriptions have been configured, set and await message arrival.')
 
@@ -56,7 +88,9 @@ class Listener(object):
                         if not callback_result:
                             return
 
-            except Exception as e:
+            except GoogleAPICallError as e:
+                if isinstance(e, NotFound):
+                    raise e
                 logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
                 logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
                 time.sleep(10)
@@ -75,8 +109,7 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
 
-        if self._is_exceeded(subscription_id):
-            return "Your article limit has been exceeded. Please contact your customer service representitive for more info."
+        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
