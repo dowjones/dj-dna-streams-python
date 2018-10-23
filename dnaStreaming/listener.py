@@ -46,7 +46,8 @@ class Listener(object):
                         'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account ' +
                         '({}). As such, no new documents will be added to your stream\'s queue. However, you won\'t ' +
                         'lose access to any documents that have already been added to the queue. These will continue ' +
-                        'to be streamed to you.'.format(limit_msg))
+                        'to be streamed to you. Contact your account administrator with any questions or to upgrade ' +
+                        'your account limits.'.format(limit_msg))
 
             except KeyError:
                 raise Exception(
