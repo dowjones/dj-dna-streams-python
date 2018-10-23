@@ -3,8 +3,10 @@ from __future__ import absolute_import, division, print_function
 import errno
 import json
 import os
+import requests
 
 # Python3 has FileNotFoundError defined. Python2 does not.
+
 try:
     FileNotFoundError
 except NameError:
@@ -13,25 +15,25 @@ except NameError:
 
 class Config(object):
     OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'
-    CRED_ALPHA_PROD_URI = 'https://api.dowjones.com/alpha/accounts/streaming-credentials'
-    CRED_DNA_PROD_URI = 'https://api.dowjones.com/dna/accounts/streaming-credentials'
+    DEFAULT_HOST = 'https://api.dowjones.com'
 
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
-    ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
     ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
-    ENV_VAR_CREDENTIALS_URI = 'CREDENTIALS_URI'
-    ENV_VAR_STREAMS_URI = 'STREAMS_URI'
+    ENV_VAR_USER_KEY = 'USER_KEY'
     ENV_VAR_USER_ID = 'USER_ID'
     ENV_VAR_CLIENT_ID = 'CLIENT_ID'
     ENV_VAR_PASSWORD = 'PASSWORD'
+    ENV_VAR_EXTRACTION_API_HOST = 'EXTRACTION_API_HOST'
 
-    def __init__(self, account_id=None, user_id=None, client_id=None, password=None):
+    def __init__(self, user_key=None, user_id=None, client_id=None, password=None):
         self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
         self.initialized = False
-        self.account_id = account_id
+        self.user_key = user_key
         self.user_id = user_id
         self.client_id = client_id
         self.password = password
+
+        self.headers = None
 
     def _initialize(self):
         self._validate()
@@ -40,6 +42,7 @@ class Config(object):
             self.customer_config = json.load(f)
 
         self.initialized = True
+        self.headers = None
 
     def _validate(self):
         if not os.path.isfile(self.customer_config_path):
@@ -48,8 +51,84 @@ class Config(object):
         if not os.access(self.customer_config_path, os.R_OK):
             raise Exception('Encountered permission problem reading file from path \'{}\'.'.format(self.customer_config_path))
 
+    def get_headers(self):
+        if self.headers:
+            return self.headers
+        else:
+            self.headers = self.get_authentication_headers()
+            return self.headers
+
+    def get_authentication_headers(self):
+        if self.oauth2_credentials():
+            return {
+                'Authorization': self._fetch_jwt()
+            }
+
+        # missing oauth creds, authenticate the old way via user key
+        user_key = self.get_user_key()
+        if user_key:
+            return {
+                'user-key': user_key
+            }
+
+        else:
+            msg = '''Could not find determine credentials:
+                Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
+                (see README.rst)'''
+            raise Exception(msg)
+
+    def _fetch_jwt(self):
+        oauth2_credentials = self.oauth2_credentials()
+        user_id = oauth2_credentials.get('user_id')
+        client_id = oauth2_credentials.get('client_id')
+        password = oauth2_credentials.get('password')
+
+        # two requests need to be made, to the same URL, with slightly different params, to finally obtain a JWT
+        # the second request contains params returned in the response of the first request
+        # I know this makes no sense but it is what it is
+        body = {
+            'username': user_id,
+            'client_id': client_id,
+            'password': password,
+            'connection': 'service-account',
+            'grant_type': 'password',
+            'scope': 'openid service_account_id'
+        }
+
+        try:
+
+            response = _get_requests().post(self.OAUTH_URL, data=body).json()
+            body['scope'] = 'openid pib'
+            body['grant_type'] = 'urn:ietf:params:oauth:grant-type:jwt-bearer'
+            body['access_token'] = response.get('access_token')
+            body['assertion'] = response.get('id_token')
+
+            response = _get_requests().post(self.OAUTH_URL, data=body).json()
+
+            return '{0} {1}'.format(response['token_type'], response['access_token'])
+        except (KeyError, ValueError):
+            msg = '''Unable to retrieve JWT with the given credentials:
+                User ID: {0}
+                Client ID: {1}
+                Password: {2}
+            '''.format(user_id, client_id, password)
+            raise Exception(msg)
+
+    def get_uri_context(self):
+        headers = self.get_headers()
+        host = os.getenv(self.ENV_VAR_EXTRACTION_API_HOST, self.DEFAULT_HOST)
+        if "Authorization" in headers:
+            return host + '/dna'
+        elif 'user-key' in headers:
+            return host + '/alpha'
+        else:
+            msg = '''Could not determine user credentials:
+                Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
+                (see README.rst)'''
+            raise Exception(msg)
+
     # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in the constructor, env vars or config file
-    # otherwise return None (the client will have to authenticate Extraction API request with an account ID, i.e. the old way)
+    # otherwise return None (the client will have to authenticate Extraction API request with an user key, i.e. the old way)
     def oauth2_credentials(self):
         creds = self._build_oauth2_credentials(
             self.user_id,
@@ -85,22 +164,22 @@ class Config(object):
             }
         return None
 
-    def service_account_id(self):
-        if self.account_id is not None:
-            service_account_id = self.account_id
+    def get_user_key(self):
+        if self.user_key is not None:
+            user_key = self.user_key
         else:
-            service_account_id = os.getenv(self.ENV_VAR_SERVICE_ACCOUNT_ID)
+            user_key = os.getenv(self.ENV_VAR_USER_KEY)
 
-            if service_account_id is None:
-                service_account_id = self._service_account_id_from_file()
+            if user_key is None:
+                user_key = self._user_key_id_from_file()
 
-        return service_account_id
+        return user_key
 
-    def _service_account_id_from_file(self):
+    def _user_key_id_from_file(self):
         if not self.initialized:
             self._initialize()
 
-        return self.customer_config.get('service_account_id')
+        return self.customer_config.get('user_key')
 
     def subscription(self):
         if os.getenv(self.ENV_VAR_SUBSCRIPTION_ID) is not None:
@@ -120,8 +199,6 @@ class Config(object):
 
         return self.customer_config['subscription_id']
 
-    def credentials_uri(self, headers):
-        if 'Authorization' in headers:
-            return os.getenv(self.ENV_VAR_CREDENTIALS_URI, self.CRED_DNA_PROD_URI)
-        else:
-            return os.getenv(self.ENV_VAR_CREDENTIALS_URI, self.CRED_ALPHA_PROD_URI)
+
+def _get_requests():
+    return requests
