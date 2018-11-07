@@ -35,7 +35,6 @@ class Listener(object):
                         limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
                     else:
                         limits_uri = host + '/accounts/' + self.config.get_user_key()
-                    total_msg = 'NA'
                     limit_msg = 'NA'
                     try:
                         lr = requests.get(limits_uri, headers=headers)
