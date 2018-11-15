@@ -20,14 +20,16 @@ class Config(object):
     DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
     ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
     ENV_VAR_USER_KEY = 'USER_KEY'
+    ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
     ENV_VAR_USER_ID = 'USER_ID'
     ENV_VAR_CLIENT_ID = 'CLIENT_ID'
     ENV_VAR_PASSWORD = 'PASSWORD'
     ENV_VAR_EXTRACTION_API_HOST = 'EXTRACTION_API_HOST'
 
-    def __init__(self, user_key=None, user_id=None, client_id=None, password=None):
+    def __init__(self, service_account_id=None, user_key=None, user_id=None, client_id=None, password=None):
         self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
         self.initialized = False
+        self.service_account_id = service_account_id
         self.user_key = user_key
         self.user_id = user_id
         self.client_id = client_id
@@ -164,11 +166,14 @@ class Config(object):
             }
         return None
 
+    # in the following two methods, note that we use "SERVICE_ACCOUNT_ID" as a legacy,
+    # alternate name for the "USER_KEY" parameter, from the customer's perspective
     def get_user_key(self):
-        if self.user_key is not None:
-            user_key = self.user_key
-        else:
-            user_key = os.getenv(self.ENV_VAR_USER_KEY)
+        user_key = self.user_key if self.user_key else self.service_account_id
+
+        if user_key is None:
+            user_key = os.getenv(self.ENV_VAR_USER_KEY,
+                                 os.getenv(self.ENV_VAR_SERVICE_ACCOUNT_ID))
 
             if user_key is None:
                 user_key = self._user_key_id_from_file()
@@ -179,7 +184,8 @@ class Config(object):
         if not self.initialized:
             self._initialize()
 
-        return self.customer_config.get('user_key')
+        return self.customer_config.get('user_key',
+                                        self.customer_config.get('service_account_id'))
 
     def subscription(self):
         if os.getenv(self.ENV_VAR_SUBSCRIPTION_ID) is not None:
