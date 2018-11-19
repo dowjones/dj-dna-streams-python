@@ -77,7 +77,6 @@ class TestConfig(TestCase, PatchMixin):
         # Arrange
         os.environ[Config.ENV_VAR_USER_KEY] = '123'
         os.environ[Config.ENV_VAR_SUBSCRIPTION_ID] = 'ABC'
-        os.environ[Config.ENV_VAR_EXTRACTION_API_HOST] = 'http://hiptotherythum.com'
         os.environ[Config.ENV_VAR_USER_ID] = 'user'
         os.environ[Config.ENV_VAR_CLIENT_ID] = 'client'
         os.environ[Config.ENV_VAR_PASSWORD] = 'password'
@@ -96,6 +95,22 @@ class TestConfig(TestCase, PatchMixin):
         assert os.environ[Config.ENV_VAR_CLIENT_ID] == config.oauth2_credentials().get('client_id')
         assert os.environ[Config.ENV_VAR_PASSWORD] == config.oauth2_credentials().get('password')
 
+    def test_environment_variable_service_account_id_success(self):
+        # Arrange
+        os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] = 'lemme_in'
+        os.environ[Config.ENV_VAR_SUBSCRIPTION_ID] = 'ABC'
+
+        # Act
+        config = Config()
+        fileFolder = os.path.dirname(os.path.realpath(__file__))
+        config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
+        config._initialize()
+
+        # Assert
+        assert os.environ[Config.ENV_VAR_SERVICE_ACCOUNT_ID] == config.get_user_key()
+        subscription_id = config.subscription()
+        assert subscription_id == 'ABC'
+
     def test_oauth2_creds_not_provided(self):
         # Arrange
         config = Config()
@@ -110,6 +125,15 @@ class TestConfig(TestCase, PatchMixin):
         # Arrange
         # Act
         config = Config(user_key='123')
+
+        # Assert
+        print(config.get_user_key())
+        assert config.get_user_key() == '123'
+
+    def test_service_account_id_passed_success(self):
+        # Arrange
+        # Act
+        config = Config(service_account_id='123')
 
         # Assert
         print(config.get_user_key())

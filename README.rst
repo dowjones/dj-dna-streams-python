@@ -32,7 +32,7 @@ To run this code, you need to provide credentials from one of the authentication
 
 
 
-To set your service account credentials, set either 'SERVICE_ACCOUNT_ID' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
+To set your service account credentials, set either 'USER_KEY' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
 To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
 .. code-block::
@@ -57,7 +57,7 @@ You may pass your service account credentials (user_id, client_id, and password)
 
     from dnaStreaming.listener import Listener
     #User key authentication
-    listener = Listener(service_account_id=<YOUR USER KEY>)
+    listener = Listener(user_key=<YOUR USER KEY>)
     #or
     #UserId, ClientId, Password
 
