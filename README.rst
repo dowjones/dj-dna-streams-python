@@ -10,16 +10,15 @@ To use this we recommend 'pip installing' this by making the following addition 
 
     git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-python
 
-.. code-block::
 
 Auth
 -----------
 
 There are two ways to authenticate.
 
-Option 1. Your User Key
+- Your User Key
 
-Option 2. UserId, ClientId and Password
+- UserId, ClientId and Password
 
 
 Configuring
@@ -32,14 +31,17 @@ To run this code, you need to provide credentials from one of the authentication
 
 
 
-To set your service account credentials, set either 'USER_KEY' or three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
+To set your service account credentials, set either:
+
+- An environment variable named 'USER_KEY'.
+- Three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
+
 To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
 .. code-block::
 
     export SUBSCRIPTION_ID="ABC1234567889"
 
-.. code-block::
 
 To be clear, the code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
 
@@ -53,35 +55,32 @@ In this codebase you will find a file named 'customer_config.json'. You are not 
 
 You may pass your service account credentials (user_id, client_id, and password) to the Listener constructor like so:
 
-.. code-block::
+.. code-block:: python
 
     from dnaStreaming.listener import Listener
-    #User key authentication
+    # User key authentication
     listener = Listener(user_key=<YOUR USER KEY>)
-    #or
-    #UserId, ClientId, Password
 
+    # UserId, ClientId and Password authentication
     listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
 
-.. code-block::
 
 Or you may use the environment variables.
 Remember that passing credentials and subscription ID(s) in this way will override the environment variable and the config file settings.
 
-.. code-block::
+.. code-block:: python
 
     from dnaStreaming.listener import Listener
 
     listener = Listener()
-
-.. code-block::
 
 
 4. Listening to messages
 ###################################################################
 
 You may want to listen messages synchronously like so:
-.. code-block::
+
+.. code-block:: python
 
     def callback(message, subscription_id):
         print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
@@ -90,10 +89,10 @@ You may want to listen messages synchronously like so:
     listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
     # You may pass subscription ID as a parameter to the listen function
 
-.. code-block::
 
 You may want to listen messages asynchronously like so:
-.. code-block::
+
+.. code-block:: python
 
     def callback(message, subscription_id):
         print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
@@ -108,7 +107,7 @@ You may want to listen messages asynchronously like so:
     if future.running():
         future.cancel()
 
-.. code-block::
+
 Log Files
 _________
 
@@ -124,15 +123,12 @@ _______
     pip install -r requirements.txt
     py.test . -s
 
-.. code-block::
 
 or, alternatively, to test against python2.7 and python3.5:
 
 .. code-block::
 
     tox
-
-.. code-block::
 
 
 Flake8
@@ -143,8 +139,6 @@ If you are maintaining this library, ensure you run flake8 before you commit. At
 .. code-block::
 
     flake8 ./dnaStreaming ./tests
-
-.. code-block::
 
 
 Running the Demonstration Code/Development
@@ -165,7 +159,6 @@ If you are enhancing this codebase (and not just using it as a library), follow 
 
     virtualenv venv
 
-.. code-block::
 
 4. Then activate the virutal environment by executing this command:
 ###################################################################
@@ -174,7 +167,6 @@ If you are enhancing this codebase (and not just using it as a library), follow 
 
     source ./venv/bin/activate
 
-.. code-block::
 
 5. Install the Dependencies
 ###################################################################
@@ -183,7 +175,6 @@ If you are enhancing this codebase (and not just using it as a library), follow 
 
     pip install -r requirements.txt
 
-.. code-block::
 
 6. Install the App:
 ###################################################################
@@ -191,8 +182,6 @@ If you are enhancing this codebase (and not just using it as a library), follow 
 .. code-block::
 
     python setup.py install
-
-.. code-block::
 
 
 7. Set the Configuration Variables
@@ -211,15 +200,12 @@ Execute the following at the project root:
 
     python ./dnaStreaming/demo/show_stream.py -s
 
-.. code-block::
 
 Or
 
 .. code-block::
 
     python ./dnaStreaming/demo/show_stream_async.py -s
-
-.. code-block::
 
 
 Running Docker Demo
@@ -236,5 +222,3 @@ Execute the following at the project root:
     -e PASSWORD=<your password> \
     -e SUBSCRIPTION_ID=<your subscription ID> \
     dj-dna-streaming-python
-
-.. code-block::
