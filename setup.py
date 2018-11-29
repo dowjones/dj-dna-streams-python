@@ -23,7 +23,7 @@ setup(
         'google-cloud-core==0.28.1',
         'mock==2.0.0',
         'oauth2client==3.0.0',
-        'requests==2.18.4'
+        'requests==2.20.1'
     ],
     classifiers=[
         'Programming Language :: Python :: 2',

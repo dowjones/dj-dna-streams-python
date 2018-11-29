@@ -208,6 +208,13 @@ Or
     python ./dnaStreaming/demo/show_stream_async.py -s
 
 
+If you are having `ImportError:  No module named ...` run this in your terminal before running the demo:
+
+.. code-block::
+
+    export PYTHONPATH='.'
+
+
 Running Docker Demo
 
 Execute the following at the project root:
