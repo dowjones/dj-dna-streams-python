@@ -74,7 +74,7 @@ class Listener(object):
         logger.info('Listeners for subscriptions have been configured, set and await message arrival.')
 
         count = 0
-        while maximum_messages is None or count <= maximum_messages:
+        while maximum_messages is None or count < maximum_messages:
             try:
                 if maximum_messages is not None:
                     batch_size = min(batch_size, maximum_messages - count)
