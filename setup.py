@@ -17,13 +17,13 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        'googleapis-common-protos>=1.6.0',
-        'google-auth>=1.6.0',
-        'google-cloud-pubsub==0.38.0',
-        'google-cloud-core==0.28.1',
-        'mock==2.0.0',
-        'oauth2client==3.0.0',
-        'requests==2.20.1'
+        # 'googleapis-common-protos>=1.6.0',
+        'google-auth>=1.6.3',
+        'google-cloud-pubsub>=1.0.0',
+        'google-cloud-core>=1.0.3',
+        'mock>=3.0.5',
+        'oauth2client>=4.1.3',
+        'requests>=2.22.0'
     ],
     classifiers=[
         'Programming Language :: Python :: 2',
