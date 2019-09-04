@@ -79,13 +79,23 @@ class Listener(object):
                 if maximum_messages is not None:
                     batch_size = min(batch_size, maximum_messages - count)
                 results = pubsub_client.pull(subscription_path, max_messages=batch_size, return_immediately=True)
+#                if results:
+#                    for message in results.received_messages:
+#                        callback_result = on_message_callback(message.message, subscription_id)
+#                        pubsub_client.acknowledge(subscription_path, [message.ack_id])
+#                        count += 1
+#                        if not callback_result:
+#                            return
+
                 if results:
-                    for message in results.received_messages:
-                        callback_result = on_message_callback(message.message, subscription_id)
-                        pubsub_client.acknowledge(subscription_path, [message.ack_id])
-                        count += 1
-                        if not callback_result:
-                            return
+                    if len(results.reveived_messages) > 0:
+                        with open("dnaStreaming/articles/articles_{}.json".format(int(time.time())), "wt", encoding="utf-8") as article_file:
+                            for message in results.received_messages:
+                                callback_result = on_message_callback(message.message, subscription_id, article_file)
+                                pubsub_client.acknowledge(subscription_path, [message.ack_id])
+                                count += 1
+                                if not callback_result:
+                                    return
 
             except GoogleAPICallError as e:
                 if isinstance(e, NotFound):
