@@ -88,9 +88,10 @@ class Listener(object):
 #                            return
 
                 if results:
-                    if len(results.reveived_messages) > 0:
+                    if len(results.received_messages) > 0:
                         with open("dnaStreaming/articles/articles_{}.json".format(int(time.time())), "wt", encoding="utf-8") as article_file:
                             for message in results.received_messages:
+                                print("MSG: {0}".format(message.message.data))
                                 callback_result = on_message_callback(message.message, subscription_id, article_file)
                                 pubsub_client.acknowledge(subscription_path, [message.ack_id])
                                 count += 1
