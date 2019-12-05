@@ -76,4 +76,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Removed maximum messages parameter in listen call. It was unnecessary.
 - [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.
   
-
+1.4.2 / 2018-03-19
+==================
+- [changed] - Removed support for Python 2, due to near end of life.
+- [changed] - Updated all dependencies to latest ones.
+- [docs] - Minor improvements.
