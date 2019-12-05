@@ -1,7 +1,6 @@
 How To Use
 ----------
 
-
 This library is for Dow Jones customers consuming a Dow Jones DNA stream.
 
 To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
@@ -28,8 +27,6 @@ To run this code, you need to provide credentials from one of the authentication
 
 1. Set environment variables.
 ###################################################################
-
-
 
 To set your service account credentials, set either:
 
