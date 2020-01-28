@@ -7,7 +7,7 @@ import logging
 
 BASE_DIR = os.path.dirname(__file__)
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.WARN)
 
 logger = logging.getLogger()
 
