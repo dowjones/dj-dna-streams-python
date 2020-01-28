@@ -75,9 +75,17 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Updated demo code to accept environment variable that, when used, reduces the output volume.
 - [changed] - Removed maximum messages parameter in listen call. It was unnecessary.
 - [changed] - Added test shell script './dnaStreaming/test/test_run_docker.sh' for testing Docker and streams; to be used only with DNA Engineering assistance.
-  
+
 1.4.2 / 2019-12-13
 ==================
 - [changed] - Removed support for Python 2, due to near end of life.
 - [changed] - Updated all dependencies to latest ones.
+- [docs] - Minor improvements.
+
+1.4.3 / 2020-01-28
+==================
+- [changed] - Message format provided by the listener.
+- [changed] - Default logging level (still hardcoded)
+- [changed] - Demo files output, to be more explicit on current actions.
+- [added] - Demo file that push messages to GCP Pub/Sub
 - [docs] - Minor improvements.

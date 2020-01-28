@@ -3,12 +3,12 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-    name='dj-dna-streaming-python',
-    version='1.4.2',
+    name='djdp-streaming-python',
+    version='1.4.3',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
-    url='https://github.com/dowjones/dj-dna-streams-python',
+    url='https://github.com/miballe/dp-streams-python',
     packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
@@ -17,7 +17,6 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        # 'googleapis-common-protos>=1.6.0',
         'google-auth>=1.7.0',
         'google-cloud-pubsub>=1.0.0',
         'google-cloud-core>=1.0.3',
