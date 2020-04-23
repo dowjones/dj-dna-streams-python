@@ -18,7 +18,7 @@ setup(
 
     install_requires=[
         'googleapis-common-protos==1.6.0',
-        'google-auth==1.0.2',
+        'google-auth==1.14.0',
         'google-cloud-pubsub==0.38.0',
         'google-cloud-core==0.28.1',
         'mock==2.0.0',
