@@ -229,3 +229,12 @@ Execute the following at the project root:
     -e PASSWORD=<your password> \
     -e SUBSCRIPTION_ID=<your subscription ID> \
     dj-dna-streaming-python
+
+or:
+
+.. code-block::
+
+    docker run -it \                    
+    -e USER_KEY=<your user KEY> \
+    -e SUBSCRIPTION_ID=<your subscription ID> \
+    dj-dna-streaming-python
