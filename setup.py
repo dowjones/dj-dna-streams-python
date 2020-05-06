@@ -17,6 +17,7 @@ setup(
     include_package_data=True,
 
     install_requires=[
+        'googleapis-common-protos>=1.6.0',
         'google-auth>=1.7.0',
         'google-cloud-pubsub>=1.0.0',
         'google-cloud-core>=1.0.3',
@@ -25,6 +26,7 @@ setup(
         'requests>=2.22.0'
     ],
     classifiers=[
+         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3'
     ]
 )
