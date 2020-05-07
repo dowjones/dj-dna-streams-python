@@ -1,5 +1,4 @@
 .DS_Store
-.tox
 *.bak
 *.pyc
 .idea/*
@@ -7,7 +6,6 @@
 /src/tests/DowJonesDNA.json
 r.sh
 /build
-dnaStreaming/articles
 dnaStreaming/logs
 .cache
 

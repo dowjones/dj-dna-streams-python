@@ -80,17 +80,16 @@ class Listener(object):
                 results = pubsub_client.pull(subscription_path, max_messages=batch_size, return_immediately=True)
                 if results:
                     if len(results.received_messages) > 0:
-                        with open("dnaStreaming/articles/articles_{}.json".format(int(time.time())), "wt", encoding="utf-8") as article_file:
-                            for message in results.received_messages:
-                                # print("MSG: {0}".format(message.message.data))
-                                pubsub_msg = json.loads(message.message.data)
-                                logger.info("Received news message with ID: {}".format(pubsub_msg['data'][0]['id']))
-                                news_msg = pubsub_msg['data'][0]['attributes']
-                                callback_result = on_message_callback(news_msg, subscription_id, article_file)
-                                pubsub_client.acknowledge(subscription_path, [message.ack_id])
-                                count += 1
-                                if not callback_result:
-                                    return
+                        for message in results.received_messages:
+                            # print("MSG: {0}".format(message.message.data))
+                            pubsub_msg = json.loads(message.message.data)
+                            logger.info("Received news message with ID: {}".format(pubsub_msg['data'][0]['id']))
+                            news_msg = pubsub_msg['data'][0]['attributes']
+                            callback_result = on_message_callback(news_msg, subscription_id)
+                            pubsub_client.acknowledge(subscription_path, [message.ack_id])
+                            count += 1
+                            if not callback_result:
+                                return
 
             except GoogleAPICallError as e:
                 if isinstance(e, NotFound):

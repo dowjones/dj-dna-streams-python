@@ -1,13 +1,13 @@
 How To Use
 ----------
 
-This library is for Dow Jones customers consuming a Dow Jones Factiva Streams.
+This library is for Dow Jones customers consuming data from a Dow Jones DNA Stream.
 
 To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
 
 .. code-block::
 
-    git+https://git@github.com/miballe/factiva-streams-python#egg=factiva-streams-python
+    git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-python
 
 
 Auth
@@ -54,7 +54,7 @@ You may pass your service account credentials (user_id, client_id, and password)
 
 .. code-block:: python
 
-    from FactivaStream.listener import Listener
+    from dnaStreaming.listener import Listener
     # User key authentication
     listener = Listener(user_key=<YOUR USER KEY>)
 
@@ -67,7 +67,7 @@ Remember that passing credentials and subscription ID(s) in this way will overri
 
 .. code-block:: python
 
-    from FactivaStream.listener import Listener
+    from dnaStreaming.listener import Listener
 
     listener = Listener()
 
