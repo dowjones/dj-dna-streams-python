@@ -27,7 +27,6 @@ setup(
         'requests>=2.22.0'
     ],
     classifiers=[
-         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 3'
     ]
 )
