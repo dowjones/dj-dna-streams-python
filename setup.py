@@ -8,7 +8,7 @@ setup(
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
-    url='https://github.com/dowjones/dp-streams-python',
+    url='https://github.com/dowjones/dj-dna-streams-python',
     packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
