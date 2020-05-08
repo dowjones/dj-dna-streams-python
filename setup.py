@@ -3,13 +3,13 @@ from distutils.core import setup
 from setuptools import find_packages
 
 setup(
-    name='dj-dna-streaming-python',
+    name='dnaStreaming',
     version='2.0.0',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
     url='https://github.com/dowjones/dj-dna-streams-python',
-    download_url='RELEASE_URL_HERE',
+    download_url='https://github.com/dowjones/dj-dna-streams-python/archive/release-2.0.0.tar.gz',
     keywords=['DOWJONES', 'FACTIVA', 'STREAMS'],
     packages=find_packages(exclude='tests'),
 
