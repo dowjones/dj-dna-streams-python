@@ -9,6 +9,8 @@ setup(
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
     url='https://github.com/dowjones/dj-dna-streams-python',
+    download_url='RELEASE_URL_HERE',
+    keywords=['DOWJONES', 'FACTIVA', 'STREAMS'],
     packages=find_packages(exclude='tests'),
 
     # metadata for upload to PyPI
@@ -27,6 +29,9 @@ setup(
         'requests>=2.22.0'
     ],
     classifiers=[
+        'Development Status :: 5 - Production/Stable',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3'
     ]
 )
