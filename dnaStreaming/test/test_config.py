@@ -1,22 +1,13 @@
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import os
 import unittest
 from unittest import TestCase
+from unittest.mock import patch
 
-from .PatchMixin import PatchMixin
 from dnaStreaming.config import Config
 
-# Python3 has FileNotFoundError defined. Python2 does not.
-try:
-    FileNotFoundError
-except NameError:
-    FileNotFoundError = IOError
-
-
-class TestConfig(TestCase, PatchMixin):
-    def setUp(self):
-        self.patch_module(os.access, True)
+class TestConfig(TestCase):
 
     def tearDown(self):
         self.ensure_remove_environment_variable(Config.ENV_VAR_USER_KEY)
@@ -127,7 +118,6 @@ class TestConfig(TestCase, PatchMixin):
         config = Config(user_key='123')
 
         # Assert
-        print(config.get_user_key())
         assert config.get_user_key() == '123'
 
     def test_service_account_id_passed_success(self):
@@ -136,21 +126,18 @@ class TestConfig(TestCase, PatchMixin):
         config = Config(service_account_id='123')
 
         # Assert
-        print(config.get_user_key())
         assert config.get_user_key() == '123'
 
-    def test_get_headers_jwt(self):
+    @patch.object(Config, '_fetch_jwt', return_value='test_jwt_value')
+    def test_get_headers_jwt(self, fetch_jwt_mock):
         # Arrange
         config = Config()
 
         fileFolder = os.path.dirname(os.path.realpath(__file__))
         config._set_customer_config_path(os.path.join(fileFolder, 'test_customer_config.json'))
 
-        jwt = "Bearer of Bad News"
-        fetch_jwt_mock = self.patch_module(config._fetch_jwt, jwt)
-
         headers_expected = {
-            'Authorization': jwt
+            'Authorization': 'test_jwt_value'
         }
 
         # Act
@@ -160,7 +147,8 @@ class TestConfig(TestCase, PatchMixin):
         assert headers_actual == headers_expected
         fetch_jwt_mock.assert_called_once()
 
-    def test_get_headers_user_key(self):
+    @patch.object(Config, '_fetch_jwt', return_value='test_jwt_value')
+    def test_get_headers_user_key(self, fetch_jwt_mock):
         # Arrange
         user_key = "just some user key"
         config = Config(user_key)
@@ -168,8 +156,6 @@ class TestConfig(TestCase, PatchMixin):
         headers_expected = {
             'user-key': user_key
         }
-
-        fetch_jwt_mock = self.patch_module(config._fetch_jwt, '')
 
         # Act
         headers_actual = config.get_authentication_headers()

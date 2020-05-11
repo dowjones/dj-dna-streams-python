@@ -81,7 +81,6 @@ class Listener(object):
                 if results:
                     if len(results.received_messages) > 0:
                         for message in results.received_messages:
-                            # print("MSG: {0}".format(message.message.data))
                             pubsub_msg = json.loads(message.message.data)
                             logger.info("Received news message with ID: {}".format(pubsub_msg['data'][0]['id']))
                             news_msg = pubsub_msg['data'][0]['attributes']

@@ -1,7 +1,7 @@
 How To Use
 ----------
 
-This library is for Dow Jones customers consuming data from a Dow Jones Factiva Stream.
+This a Python3 library is for Dow Jones customers consuming data from a Dow Jones Factiva Stream.
 
 To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
 

@@ -1,17 +1,9 @@
-from __future__ import absolute_import, division, print_function
+from __future__ import absolute_import, division
 
 import errno
 import json
 import os
 import requests
-
-# Python3 has FileNotFoundError defined. Python2 does not.
-
-try:
-    FileNotFoundError
-except NameError:
-    FileNotFoundError = IOError
-
 
 class Config(object):
     OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'

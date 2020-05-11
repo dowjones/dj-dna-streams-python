@@ -89,3 +89,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Demo files output, to be more explicit on current actions.
 - [added] - Demo file that push messages to GCP Pub/Sub
 - [docs] - Minor improvements.
+
+2.0.0 / 2020-05-11
+==================
+- [changed] phased out Python 2.7 support in preparation for PyPi publication
+- [docs] - Minor improvements.
+
