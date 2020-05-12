@@ -1,7 +1,6 @@
-from __future__ import absolute_import, division, print_function
-
 import time
 import requests
+import json
 from google.api_core.exceptions import GoogleAPICallError, NotFound
 from threading import Thread
 
@@ -80,24 +79,32 @@ class Listener(object):
                     batch_size = min(batch_size, maximum_messages - count)
                 results = pubsub_client.pull(subscription_path, max_messages=batch_size, return_immediately=True)
                 if results:
-                    for message in results.received_messages:
-                        callback_result = on_message_callback(message.message, subscription_id)
-                        pubsub_client.acknowledge(subscription_path, [message.ack_id])
-                        count += 1
-                        if not callback_result:
-                            return
+                    if len(results.received_messages) > 0:
+                        for message in results.received_messages:
+                            pubsub_msg = json.loads(message.message.data)
+                            logger.info("Received news message with ID: {}".format(pubsub_msg['data'][0]['id']))
+                            news_msg = pubsub_msg['data'][0]['attributes']
+                            callback_result = on_message_callback(news_msg, subscription_id)
+                            pubsub_client.acknowledge(subscription_path, [message.ack_id])
+                            count += 1
+                            if not callback_result:
+                                return
 
             except GoogleAPICallError as e:
                 if isinstance(e, NotFound):
                     raise e
                 logger.error("Encountered a problem while trying to pull a message from a stream. Error is as follows: {}".format(str(e)))
-                logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from the stream again.")
+                logger.error("Due to the previous error, system will pause 10 seconds. System will then attempt to pull the message from "
+                             "the stream again.")
                 time.sleep(10)
                 pubsub_client = pubsub_service.get_client(self.config)
 
     def listen_async(self, on_message_callback, subscription_id=""):
         def ack_message_and_callback(message):
-            on_message_callback(message, subscription_id)
+            pubsub_msg = json.loads(message.data)
+            logger.info("Received news message with ID: {}".format(pubsub_msg['data'][0]['id']))
+            news_msg = pubsub_msg['data'][0]['attributes']
+            on_message_callback(news_msg, subscription_id)
             message.ack()
 
         pubsub_client = pubsub_service.get_client(self.config)
@@ -106,7 +113,8 @@ class Listener(object):
 
         if not subscription_id:
             raise Exception(
-                'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or by passing the value to the method.')
+                'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or '
+                'by passing the value to the method.')
 
         self.check_exceeded_thread(subscription_id)
 

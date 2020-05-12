@@ -1,8 +1,7 @@
 How To Use
 ----------
 
-
-This library is for Dow Jones customers consuming a Dow Jones DNA stream.
+This a Python3 library is for Dow Jones customers consuming data from a Dow Jones Factiva Stream.
 
 To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
 
@@ -14,11 +13,11 @@ To use this we recommend 'pip installing' this by making the following addition 
 Auth
 -----------
 
-There are two ways to authenticate.
+There are general two ways to authenticate.
 
 - Your User Key
 
-- UserId, ClientId and Password
+- UserId, ClientId, and Password
 
 
 Configuring
@@ -28,8 +27,6 @@ To run this code, you need to provide credentials from one of the authentication
 
 1. Set environment variables.
 ###################################################################
-
-
 
 To set your service account credentials, set either:
 
@@ -43,7 +40,7 @@ To set your subscription ID, simply set an environment variable named 'SUBSCRIPT
     export SUBSCRIPTION_ID="ABC1234567889"
 
 
-To be clear, the code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
+The code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
 
 2. Using the configuration file.
 ###################################################################
@@ -227,5 +224,14 @@ Execute the following at the project root:
     -e USER_ID=<your user ID> \
     -e CLIENT_ID=<your client ID> \
     -e PASSWORD=<your password> \
+    -e SUBSCRIPTION_ID=<your subscription ID> \
+    dj-dna-streaming-python
+
+or:
+
+.. code-block::
+
+    docker run -it \                    
+    -e USER_KEY=<your user KEY> \
     -e SUBSCRIPTION_ID=<your subscription ID> \
     dj-dna-streaming-python
