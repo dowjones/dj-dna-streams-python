@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='dnaStreaming',
-    version='2.0.0',
+    version='2.0.1',
     description='Dow Jones DNA Streaming Project',
     author='Chris Flesche',
     author_email='chris.flesche@dowjones.com',
@@ -21,8 +21,9 @@ setup(
     install_requires=[
         'googleapis-common-protos>=1.6.0',
         'google-auth>=1.7.0',
-        'google-cloud-pubsub>=1.1.0',
+        'google-cloud-pubsub==1.7.0',
         'google-cloud-core==1.3.0',
+        'google-api-core==1.22.4',
         'mock>=3.0.5',
         'oauth2client>=4.1.3',
         'requests>=2.22.0'
