@@ -1,13 +1,19 @@
 from distutils.core import setup
-
 from setuptools import find_packages
+# read the contents of your README file
+from os import path
+this_directory = path.abspath(path.dirname(__file__))
+with open(path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
+    long_description = f.read()
 
 setup(
     name='dnaStreaming',
-    version='2.0.1',
+    version='2.0.2',
     description='Dow Jones DNA Streaming Project',
-    author='Chris Flesche',
-    author_email='chris.flesche@dowjones.com',
+    long_description=long_description,
+    long_description_content_type='text/x-rst',
+    author='Zachary Kagan',
+    author_email='zachary.kagan@dowjones.com',
     url='https://github.com/dowjones/dj-dna-streams-python',
     download_url='https://github.com/dowjones/dj-dna-streams-python/archive/release-2.0.0.tar.gz',
     keywords=['DOWJONES', 'FACTIVA', 'STREAMS'],

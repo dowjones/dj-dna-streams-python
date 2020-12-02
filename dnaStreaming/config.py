@@ -16,7 +16,7 @@ class Config(object):
     ENV_VAR_USER_ID = 'USER_ID'
     ENV_VAR_CLIENT_ID = 'CLIENT_ID'
     ENV_VAR_PASSWORD = 'PASSWORD'
-    ENV_VAR_EXTRACTION_API_HOST = 'EXTRACTION_API_HOST'
+    ENV_VAR_API_HOST = 'API_HOST'
 
     def __init__(self, service_account_id=None, user_key=None, user_id=None, client_id=None, password=None):
         self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
@@ -110,7 +110,7 @@ class Config(object):
 
     def get_uri_context(self):
         headers = self.get_headers()
-        host = os.getenv(self.ENV_VAR_EXTRACTION_API_HOST, self.DEFAULT_HOST)
+        host = os.getenv(self.ENV_VAR_API_HOST, self.DEFAULT_HOST)
         if "Authorization" in headers:
             return host + '/dna'
         elif 'user-key' in headers:
@@ -122,7 +122,7 @@ class Config(object):
             raise Exception(msg)
 
     # return credentials (user_id, client_id, and password) for obtaining a JWT via OAuth2 if all these fields are defined in the constructor, env vars or config file
-    # otherwise return None (the client will have to authenticate Extraction API request with an user key, i.e. the old way)
+    # otherwise return None (the client will have to authenticate API request with an user key, i.e. the original standard)
     def oauth2_credentials(self):
         creds = self._build_oauth2_credentials(
             self.user_id,

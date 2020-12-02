@@ -4,11 +4,11 @@
 
 USER_KEY=$1
 SUBSCRIPTION_ID=$2
-ENV=$3
+API_HOST=$3
 
 ${USER_KEY:?"Need to set USER_KEY environment variable."}
 ${SUBSCRIPTION_ID:?"Need to set SUBSCRIPTION_ID environment variable."}
-${ENV:?"Need to set ENV environment variable."}
+${API_HOST:=https://api.dowjones.com}
 
 TIMEOUT=180 # NOTE: 2017-01-25: fleschec: In seconds
 NAME="dj-dna-streaming-python-asdvkds-for-testing-only"
@@ -28,7 +28,7 @@ run_docker() {
   --name=$NAME \
   -e USER_KEY=$USER_KEY \
   -e SUBSCRIPTION_ID=$SUBSCRIPTION_ID \
-  -e EXTRACTION_API_HOST="https://extraction-api-dot-djsyndicationhub-$ENV.appspot.com" \
+  -e API_HOST=$API_HOST \
   -e QUIET_DEMO=true \
   $NAME-tag
 }

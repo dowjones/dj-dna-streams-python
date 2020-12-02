@@ -12,7 +12,7 @@ class TestConfig(TestCase):
     def tearDown(self):
         self.ensure_remove_environment_variable(Config.ENV_VAR_USER_KEY)
         self.ensure_remove_environment_variable(Config.ENV_VAR_SUBSCRIPTION_ID)
-        self.ensure_remove_environment_variable(Config.ENV_VAR_EXTRACTION_API_HOST)
+        self.ensure_remove_environment_variable(Config.ENV_VAR_API_HOST)
         self.ensure_remove_environment_variable(Config.ENV_VAR_USER_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_CLIENT_ID)
         self.ensure_remove_environment_variable(Config.ENV_VAR_PASSWORD)
