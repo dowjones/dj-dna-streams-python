@@ -7,7 +7,7 @@ To use this we recommend 'pip installing' this by making the following addition 
 
 .. code-block::
 
-    git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dj-dna-streams-python
+    git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dnaStreaming
 
 
 Auth

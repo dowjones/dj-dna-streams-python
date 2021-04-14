@@ -92,8 +92,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 
 2.0.0 / 2020-05-11
 ==================
-- [changed] phased out Python 2.7 support in preparation for PyPi publication
-- [changed] messages from the listener are parsed and returned, instead of requiring the user to access the JSON
+- [changed] Phased out Python 2.7 support in preparation for PyPi publication
+- [changed] Messages from the listener are parsed and returned, instead of requiring the user to access the JSON
 - [docs] - Minor improvements.
 
 2.0.1 / 2020-11-03
