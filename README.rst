@@ -52,10 +52,6 @@ You may pass your service account credentials (user_id, client_id, and password)
     # User key authentication
     listener = Listener(user_key=<YOUR USER KEY>)
 
-    # UserId, ClientId and Password authentication
-    listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
-
-
 Or you may use the environment variables.
 Remember that passing credentials and subscription ID(s) in this way will override the environment variable and the config file settings.
 
