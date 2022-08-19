@@ -103,3 +103,10 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.0.2 / 2020-12-03
 ==================
 - [changed] - Removed references to depreciated Extraction API service, now you may manually specify your API host by exporting API_HOST instead of EXTRACTION_API_HOST
+
+2.0.3 / 2022-08-18
+==================
+- [changed] - Updated all GCP dependencies in requirements and setup.
+- [changed] - Optimized for installation via PIP. Setup.py is deprecated.
+- [changed] - Adapted Pub/Sub operations as per new library requirements.
+- [docs] - Changed README removing legacy references and updated the running demo steps.

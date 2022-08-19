@@ -3,21 +3,12 @@ How To Use
 
 This a Python3 library is for Dow Jones customers consuming data from a Dow Jones Factiva Stream.
 
-To use this we recommend 'pip installing' this by making the following addition to your requirements.txt:
-
-.. code-block::
-
-    git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dnaStreaming
-
+To use this we recommend 'pip installing' this please see below for more details.
 
 Auth
 -----------
 
-There are general two ways to authenticate.
-
-- Your User Key
-
-- UserId, ClientId, and Password
+Using the API user key.
 
 
 Configuring
@@ -28,19 +19,22 @@ To run this code, you need to provide credentials from one of the authentication
 1. Set environment variables.
 ###################################################################
 
-To set your service account credentials, set either:
+To set your service account credentials, set:
 
-- An environment variable named 'USER_KEY'.
-- Three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
-
-To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
+- An environment variable named 'USER_KEY'
 
 .. code-block::
 
-    export SUBSCRIPTION_ID="ABC1234567889"
+    export USER_KEY="abcd1234abcd1234abcd1234abcd1234"
+
+- A subscription ID by setting an environment variable named 'SUBSCRIPTION_ID'
+
+.. code-block::
+
+    export SUBSCRIPTION_ID="dj-synhub-stream-vxyz0987vxyz0987vxyz0987vxyz0987-4uu7uu4uu7-filtered-TmmSmmT"
 
 
-The code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
+The code above is the command line expression for setting this environment variable on Linux and Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
 
 2. Using the configuration file.
 ###################################################################
@@ -79,8 +73,8 @@ You may want to listen messages synchronously like so:
 
 .. code-block:: python
 
-    def callback(message, subscription_id):
-        print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
+    def callback(message):
+        print('Message: {}'.format(message.data.__str__()))
         return True  # If desired return False to stop the message flow. This will unblock the process as well.
 
     listener.listen(callback, maximum_messages=10)  # Omitting maximum_messages means you will continue to get messages as they appear. Can be a firehose. Use with caution.
@@ -91,8 +85,8 @@ You may want to listen messages asynchronously like so:
 
 .. code-block:: python
 
-    def callback(message, subscription_id):
-        print('Subscription ID: {}: Message: {}'.format(subscription_id, message.data.__str__()))
+    def callback(message):
+        print('Message: {}'.format(message.data.__str__()))
 
     future = listener.listen_async(callback)
     # After calling `listed_async` you need to keep the main thread alive.
@@ -165,28 +159,28 @@ If you are enhancing this codebase (and not just using it as a library), follow 
     source ./venv/bin/activate
 
 
-5. Install the Dependencies
+5. Install the App:
 ###################################################################
+
+Production Environment: Copies the application as a package in a special location within the just created Python environment. In case the code is changed, the package has to be reinstalled.
 
 .. code-block::
 
-    pip install -r requirements.txt
+    pip install .
 
-
-6. Install the App:
-###################################################################
+Development Environment: Uses the source files from the local folder. In case the code is changed, changes will be visible at the next execution.
 
 .. code-block::
 
-    python setup.py install
+    pip install -e .
 
 
-7. Set the Configuration Variables
+6. Set the Configuration Variables
 ###################################################################
 
 See the config section.
 
-8. Run the Demo Code
+7. Run the Demo Code
 ###################################################################
 
 Running Non-Docker Demo:

@@ -8,7 +8,7 @@ with open(path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='dnaStreaming',
-    version='2.0.2',
+    version='2.0.3',
     description='Dow Jones DNA Streaming Project',
     long_description=long_description,
     long_description_content_type='text/x-rst',
@@ -25,13 +25,12 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        'googleapis-common-protos>=1.6.0',
-        'google-auth>=1.7.0',
-        'google-cloud-pubsub==1.7.0',
-        'google-cloud-core==1.3.0',
-        'google-api-core==1.22.4',
-        'mock>=3.0.5',
-        'oauth2client>=4.1.3',
+        'googleapis-common-protos>=1.55.0',
+        'google-auth>=2.6.0',
+        'google-cloud-pubsub>=2.10.0',
+        'google-cloud-core>=2.2.2',
+        'google-api-core>=2.4.0',
+        'mock>=4.0.0',
         'requests>=2.22.0'
     ],
     classifiers=[
