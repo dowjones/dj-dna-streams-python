@@ -133,7 +133,7 @@ class Listener(object):
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or '
                 'by passing the value to the method.')
 
-        self.check_exceeded_thread(subscription_id)
+        # self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(self.config)
         subscription_path = pubsub_client.subscription_path(streaming_credentials['project_id'], subscription_id)
