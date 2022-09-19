@@ -6,7 +6,12 @@ quiet_demo = os.getenv('QUIET_DEMO', "false") == "true"
 print("\n[ACTIVITY] Receiving messages (SYNC)...\n[0]", end='')
 
 
-def callback(message, subscription_id, file_handle=None):
+def callback(message, subscription_id):
+    # Replace the code below with the custom operations you'd like to apply to each article (message)
+    # like writing to a file, database, or pushing the message to a separate message broker system.
+    # This demo only prints some message details.
+    # Subscription id parameter is provided and can be used for auditing purposes.
+
     callback.counter += 1
     if not quiet_demo:
         if message['action'] != 'del':
