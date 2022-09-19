@@ -2,7 +2,6 @@ import time
 import requests
 import json
 from google.api_core.exceptions import GoogleAPICallError, NotFound
-from google import pubsub_v1
 from threading import Thread
 
 from dnaStreaming import logger
@@ -26,26 +25,23 @@ class Listener(object):
         host = self.config.get_uri_context()
         headers = self.config.get_headers()
         while True:
-            stream_id_uri = host + '/streams/' + \
-                "-".join(subscription_id.split("-")[:-2])
+
+            stream_id_uri = host + '/streams/' + "-".join(subscription_id.split("-")[:-2])
 
             r = requests.get(stream_id_uri, headers=headers)
 
             try:
                 if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
                     if "Authorization" in headers:
-                        limits_uri = host + '/accounts/' + \
-                            self.config.oauth2_credentials()['client_id']
+                        limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
                     else:
                         limits_uri = host + '/accounts/' + self.config.get_user_key()
                     limit_msg = 'NA'
                     try:
                         lr = requests.get(limits_uri, headers=headers)
-                        limit_msg = lr.json()[
-                            'data']['attributes']['max_allowed_extracts']
+                        limit_msg = lr.json()['data']['attributes']['max_allowed_extracts']
                     except KeyError:
-                        logger.error(
-                            'Could not parse account limit request response.')
+                        logger.error('Could not parse account limit request response.')
                     logger.error(
                         'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account ' +
                         '({}). As such, no new documents will be added to your stream\'s queue. However, you won\'t ' +
@@ -59,8 +55,7 @@ class Listener(object):
             time.sleep(5 * 60)
 
     def check_exceeded_thread(self, subscription_id):
-        thread = Thread(target=self._check_exceeded, args=[
-                        subscription_id], daemon=True)
+        thread = Thread(target=self._check_exceeded, args=[subscription_id], daemon=True)
         thread.start()
 
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
@@ -102,6 +97,7 @@ class Listener(object):
                             logger.info("Received news message with ID: {}".format(
                                 pubsub_msg['data'][0]['id']))
                             news_msg = pubsub_msg['data'][0]['attributes']
+
                             keep_message_flow = on_message_callback(
                                 news_msg, subscription_id)
 

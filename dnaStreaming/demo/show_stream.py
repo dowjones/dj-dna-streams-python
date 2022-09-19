@@ -15,9 +15,9 @@ def callback(message, subscription_id):
     callback.counter += 1
     if not quiet_demo:
         if message['action'] != 'del':
-            print(f"[INFO] [MSG] [{callback.counter}]: [{message['action']}] AN: {message['an']}, TITLE: {message['title']}")
+            print('[INFO] [MSG] [{}]: AN: {}, TITLE: {}'.format(callback.counter, message['an'], message['title']))
         else:
-            print(f"[INFO] [MSG] [{callback.counter}]: [{message['action']}] AN: {message['an']}, *** DELETE ***")
+            print('[INFO] [MSG] [{}]: AN: {}, *** DELETE ***'.format(callback.counter, message['an']))
     else:
         if callback.counter % 10 == 0:
             print('[{}]'.format(callback.counter), end='')
