@@ -110,3 +110,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Optimized for installation via PIP. Setup.py is deprecated.
 - [changed] - Adapted Pub/Sub operations as per new library requirements.
 - [docs] - Changed README removing legacy references and updated the running demo steps.
+
+2.0.4 / 2022-09-27
+==================
+- [changed] - Updated all dependencies in requirements and setup.

@@ -6,16 +6,19 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
+VERSION = "2.0.4"
+RELEASE_TAG = f"release-{VERSION}"
+
 setup(
     name='dnaStreaming',
-    version='2.0.2',
+    version=VERSION,
     description='Dow Jones DNA Streaming Project',
     long_description=long_description,
     long_description_content_type='text/x-rst',
     author='Zachary Kagan',
     author_email='zachary.kagan@dowjones.com',
     url='https://github.com/dowjones/dj-dna-streams-python',
-    download_url='https://github.com/dowjones/dj-dna-streams-python/archive/release-2.0.0.tar.gz',
+    download_url=f'https://github.com/dowjones/dj-dna-streams-python/archive/{RELEASE_TAG}.tar.gz',
     keywords=['DOWJONES', 'FACTIVA', 'STREAMS'],
     packages=find_packages(exclude='tests'),
 
@@ -25,14 +28,14 @@ setup(
     include_package_data=True,
 
     install_requires=[
-        'googleapis-common-protos>=1.6.0',
-        'google-auth>=1.7.0',
-        'google-cloud-pubsub==1.7.0',
-        'google-cloud-core==1.3.0',
-        'google-api-core==1.22.4',
+        'googleapis-common-protos>=1.56.4',
+        'google-auth>=2.11.0',
+        'google-cloud-pubsub==2.13.6',
+        'google-cloud-core==2.3.2',
+        'google-api-core==2.10.1',
         'mock>=3.0.5',
         'oauth2client>=4.1.3',
-        'requests>=2.22.0'
+        'requests>=2.28.0'
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
