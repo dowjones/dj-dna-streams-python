@@ -114,3 +114,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.0.4 / 2022-09-27
 ==================
 - [changed] - Updated all dependencies in requirements and setup.
+
+2.0.5 / 2022-11-02
+==================
+- [changed] - Removed threaded article quota limit check.
