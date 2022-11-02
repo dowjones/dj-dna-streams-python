@@ -23,43 +23,6 @@ class Listener(object):
     def _initialize(self, config):
         self.config = config
 
-    def _check_exceeded(self, subscription_id):
-        host = self.config.get_uri_context()
-        headers = self.config.get_headers()
-        while True:
-
-            stream_id_uri = host + '/streams/' + "-".join(subscription_id.split("-")[:-2])
-
-            r = requests.get(stream_id_uri, headers=headers)
-
-            try:
-                if r.json()['data']['attributes']['job_status'] == "DOC_COUNT_EXCEEDED":
-                    if "Authorization" in headers:
-                        limits_uri = host + '/accounts/' + self.config.oauth2_credentials()['client_id']
-                    else:
-                        limits_uri = host + '/accounts/' + self.config.get_user_key()
-                    limit_msg = 'NA'
-                    try:
-                        lr = requests.get(limits_uri, headers=headers)
-                        limit_msg = lr.json()['data']['attributes']['max_allowed_extracts']
-                    except KeyError:
-                        logger.error('Could not parse account limit request response.')
-                    logger.error(
-                        'OOPS! Looks like you\'ve exceeded the maximum number of documents received for your account ' +
-                        '({}). As such, no new documents will be added to your stream\'s queue. However, you won\'t ' +
-                        'lose access to any documents that have already been added to the queue. These will continue ' +
-                        'to be streamed to you. Contact your account administrator with any questions or to upgrade ' +
-                        'your account limits.'.format(limit_msg))
-
-            except KeyError:
-                raise Exception(
-                    "Unable to request data from your stream subscription id")
-            time.sleep(5 * 60)
-
-    def check_exceeded_thread(self, subscription_id):
-        thread = Thread(target=self._check_exceeded, args=[subscription_id], daemon=True)
-        thread.start()
-
     def listen(self, on_message_callback, maximum_messages=DEFAULT_UNLIMITED_MESSAGES, subscription_id="", batch_size=10):
         pubsub_client = pubsub_service.get_client(self.config)
 
@@ -68,8 +31,6 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment ' +
                 'variable, a config file or by passing the value to the method.')
-
-        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(
             self.config)
@@ -142,8 +103,6 @@ class Listener(object):
             raise Exception(
                 'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or '
                 'by passing the value to the method.')
-
-        self.check_exceeded_thread(subscription_id)
 
         streaming_credentials = credentials_service.fetch_credentials(
             self.config)
