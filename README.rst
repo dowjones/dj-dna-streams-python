@@ -7,18 +7,17 @@ To use this we recommend 'pip installing' this by making the following addition 
 
 .. code-block::
 
-    git+https://git@github.com/dowjones/dj-dna-streams-python#egg=dnaStreaming
+    # To fetch latest version from PyPi
+    dnaStreaming
+
+    # to fetch latest version from GitHub
+    git+https://github.com/dowjones/dj-dna-streams-python#egg=dnaStreaming
 
 
 Auth
 -----------
 
-There are general two ways to authenticate.
-
-- Your User Key
-
-- UserId, ClientId, and Password
-
+There is currently one way to authenticate, which is by using **your user key**.
 
 Configuring
 ___________
@@ -28,10 +27,9 @@ To run this code, you need to provide credentials from one of the authentication
 1. Set environment variables.
 ###################################################################
 
-To set your service account credentials, set either:
+To set your service account credentials, set:
 
 - An environment variable named 'USER_KEY'.
-- Three environment variable named 'USER_ID', 'CLIENT_ID', and 'PASSWORD'.
 
 To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
@@ -50,16 +48,13 @@ In this codebase you will find a file named 'customer_config.json'. You are not 
 3. Pass in variables as function arguments.
 ###################################################################
 
-You may pass your service account credentials (user_id, client_id, and password) to the Listener constructor like so:
+You may pass your service account credentials to the Listener constructor like so:
 
 .. code-block:: python
 
     from dnaStreaming.listener import Listener
     # User key authentication
     listener = Listener(user_key=<YOUR USER KEY>)
-
-    # UserId, ClientId and Password authentication
-    listener = Listener(user_id=<YOUR USER ID>, client_id=<YOUR_CLIENT_ID>, password=<YOUR_PASSWORD>)
 
 
 Or you may use the environment variables.
@@ -215,19 +210,6 @@ If you are having `ImportError:  No module named ...` run this in your terminal 
 Running Docker Demo
 
 Execute the following at the project root:
-
-.. code-block::
-
-    docker build -f ./DockerfileDemo -t dj-dna-streaming-python .
-
-    docker run -it \
-    -e USER_ID=<your user ID> \
-    -e CLIENT_ID=<your client ID> \
-    -e PASSWORD=<your password> \
-    -e SUBSCRIPTION_ID=<your subscription ID> \
-    dj-dna-streaming-python
-
-or:
 
 .. code-block::
 
