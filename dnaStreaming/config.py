@@ -4,19 +4,20 @@ import errno
 import json
 import os
 import requests
+from pathlib import Path
 
 class Config(object):
     OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'
     DEFAULT_HOST = 'https://api.dowjones.com'
 
-    DEFAULT_CUST_CONFIG_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), './customer_config.json'))
+    DEFAULT_CUST_CONFIG_PATH = str(Path.home()) + '/customer_config.json'
     ENV_VAR_SUBSCRIPTION_ID = 'SUBSCRIPTION_ID'
     ENV_VAR_USER_KEY = 'USER_KEY'
     ENV_VAR_SERVICE_ACCOUNT_ID = 'SERVICE_ACCOUNT_ID'
     ENV_VAR_API_HOST = 'API_HOST'
 
-    def __init__(self, service_account_id=None, user_key=None):
-        self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH
+    def __init__(self, service_account_id=None, user_key=None, config_file=None):
+        self.customer_config_path = self.DEFAULT_CUST_CONFIG_PATH if config_file is None else config_file
         self.initialized = False
         self.service_account_id = service_account_id
         self.user_key = user_key
@@ -59,6 +60,7 @@ class Config(object):
             msg = """
                 Unable to find credentials. Specify your account credentials by choosing one of the following ways:
                 - set your user key to an env var under the name 'USER_KEY'
+                - place your customer_config.json file in your home directory (e.g. ~/, $HOME/)
                 - pass the absolute path of your customer_config.json file to the constructor of the Listener class
                 - pass the user key as a parameter to the constructor of the Listener class
             """

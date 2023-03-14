@@ -14,8 +14,8 @@ from dnaStreaming.services import pubsub_service, credentials_service
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = None
 
-    def __init__(self, service_account_id=None, user_key=None):
-        config = Config(service_account_id, user_key)
+    def __init__(self, service_account_id=None, user_key=None, config_file=None):
+        config = Config(service_account_id, user_key, config_file)
         self._initialize(config)
         self.current_subscription_index = 0
 
