@@ -3,11 +3,10 @@ from __future__ import absolute_import, division
 import errno
 import json
 import os
-import requests
 from pathlib import Path
 
 class Config(object):
-    OAUTH_URL = 'https://accounts.dowjones.com/oauth2/v1/token'
+
     DEFAULT_HOST = 'https://api.dowjones.com'
 
     DEFAULT_CUST_CONFIG_PATH = str(Path.home()) + '/customer_config.json'
@@ -49,7 +48,6 @@ class Config(object):
 
     def get_authentication_headers(self):
 
-        # missing oauth creds, authenticate the old way via user key
         user_key = self.get_user_key()
         if user_key:
             return {
@@ -65,6 +63,10 @@ class Config(object):
                 - pass the user key as a parameter to the constructor of the Listener class
             """
             raise Exception(msg)
+
+    def get_uri_context(self):
+        host = os.getenv(self.ENV_VAR_API_HOST, self.DEFAULT_HOST)
+        return host + '/alpha'
 
     # in the following two methods, note that we use "SERVICE_ACCOUNT_ID" as a legacy,
     # alternate name for the "USER_KEY" parameter, from the customer's perspective
@@ -105,6 +107,3 @@ class Config(object):
 
         return self.customer_config['subscription_id']
 
-
-def _get_requests():
-    return requests
