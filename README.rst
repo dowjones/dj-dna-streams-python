@@ -27,9 +27,12 @@ To run this code, you need to provide credentials from one of the authentication
 1. Set environment variables.
 ###################################################################
 
-To set your service account credentials, set:
+To set your service account credentials, set the `USER_KEY` environment variable:
 
-- An environment variable named 'USER_KEY'.
+.. code-block::
+
+    export USER_KEY="1234567890-098765432"
+
 
 To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
@@ -45,25 +48,31 @@ The code above is the command line expression for setting this environment varia
 
 In this codebase you will find a file named 'customer_config.json'. You are not required to use this file. If you prefer to use this option, fill the JSON object within by adding your user key and your subscription ID. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
 
-Once you have the configuration file ready, pass the absolute path of the file to the Listener constructor like so:
+> The listener will search for the `customer_config.json` file inside your `$HOME` directory by default.
+
+If you prefer using an explicit path to your configuration file, pass the absolute path to the Listener constructor like so:
 
 .. code-block:: python
 
     from dnaStreaming.listener import Listener
     # Config. file authentication
-    listener = Listener(config_file=<ABSOLUTE PATH TO CONFIG. FILE>)
+    listener = Listener(config_file=<ABSOLUTE PATH TO YOUR CONFIG. FILE>)
 
 
 3. Pass in variables as function arguments.
 ###################################################################
 
-You may pass your service account credentials to the Listener constructor like so:
+You may pass your user key to the Listener constructor and your subscription ID to the listen method like so:
 
 .. code-block:: python
 
     from dnaStreaming.listener import Listener
-    # User key authentication
+    # Use the user_key argument to provide your credentials
     listener = Listener(user_key=<YOUR USER KEY>)
+    # Use the subscription_id argument to provide your subscription id to the listener
+    listener.listen(callback, subscription_id=<YOUR SUBSCRIPTION ID>)
+    # same parameter for the async variation
+    listener.listen_async(callback, subscription_id=<YOUR SUBSCRIPTION ID>)
 
 
 Or you may use the environment variables.

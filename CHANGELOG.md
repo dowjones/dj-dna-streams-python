@@ -122,4 +122,4 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.1.0 / 2023-03-15
 ==================
 - [removed] - Fully removed legacy authentication method by password
-- [added] - Explicit cargument to provide the path to the customer_config.json file to the Listener constructor
+- [added] - Explicit argument to provide the path to the customer_config.json file to the Listener constructor (view README for more details)
