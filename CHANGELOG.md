@@ -118,3 +118,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.0.5 / 2022-11-02
 ==================
 - [changed] - Removed threaded article quota limit check.
+
+2.1.0 / 2023-03-15
+==================
+- [removed] - Fully removed legacy authentication method by password
+- [added] - Explicit cargument to provide the path to the customer_config.json file to the Listener constructor
