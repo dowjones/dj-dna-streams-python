@@ -114,7 +114,7 @@ class Config(object):
         if "Authorization" in headers:
             return host + '/dna'
         elif 'user-key' in headers:
-            return host + '/alpha'
+            return host
         else:
             msg = '''Could not determine user credentials:
                 Must specify account credentials as user_id, client_id, and password, either through env vars, customer_config.json, or as args to Listener constructor
