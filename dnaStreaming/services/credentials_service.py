@@ -5,7 +5,7 @@ import requests
 
 
 def fetch_credentials(config):
-    response = _get_requests().get(config.get_uri_context() + '/accounts/streaming-credentials',
+    response = _get_requests().get(config.get_uri_context() + '/sns-accounts/streaming-credentials',
                                    headers=config.get_headers())
 
     if response.status_code == 401:
