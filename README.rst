@@ -22,14 +22,17 @@ There is currently one way to authenticate, which is by using **your user key**.
 Configuring
 ___________
 
-To run this code, you need to provide credentials from one of the authentication methods and your subscriptions. There are 3 ways to do this. You can either set environment variables or you can use a configuration file.
+To run this code, you need to provide credentials from one of the authentication methods and your subscriptions. There are 3 ways to do this: you can set environment variables, use a configuration file or pass an argument to a constructor.
 
 1. Set environment variables.
 ###################################################################
 
-To set your service account credentials, set:
+To set your service account credentials, set the `USER_KEY` environment variable:
 
-- An environment variable named 'USER_KEY'.
+.. code-block::
+
+    export USER_KEY="1234567890-098765432"
+
 
 To set your subscription ID, simply set an environment variable named 'SUBSCRIPTION_ID' like so
 
@@ -43,18 +46,33 @@ The code above is the command line expression for setting this environment varia
 2. Using the configuration file.
 ###################################################################
 
-In this codebase you will find a file named 'customer_config.json'. You are not required to use this file. If you prefer to use this configuration file, follow these directions: Open this file and add your service account credentials. Then add your subscription IDs. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
+In this codebase you will find a file named 'customer_config.json'. You are not required to use this file. If you prefer to use this option, fill the JSON object within by adding your user key and your subscription ID. Remember that this is a JSON file so follow basic JSON formatting and syntax conventions.
 
-3. Pass in variables as function arguments.
-###################################################################
+> The listener will search for the `customer_config.json` file inside your `$HOME` directory by default.
 
-You may pass your service account credentials to the Listener constructor like so:
+If you prefer using an explicit path to your configuration file, pass the absolute path to the Listener constructor like so:
 
 .. code-block:: python
 
     from dnaStreaming.listener import Listener
-    # User key authentication
+    # Config. file authentication
+    listener = Listener(config_file=<ABSOLUTE PATH TO YOUR CONFIG. FILE>)
+
+
+3. Pass in variables as function arguments.
+###################################################################
+
+You may pass your user key to the Listener constructor and your subscription ID to the listen method like so:
+
+.. code-block:: python
+
+    from dnaStreaming.listener import Listener
+    # Use the user_key argument to provide your credentials
     listener = Listener(user_key=<YOUR USER KEY>)
+    # Use the subscription_id argument to provide your subscription id to the listener
+    listener.listen(callback, subscription_id=<YOUR SUBSCRIPTION ID>)
+    # same parameter for the async variation
+    listener.listen_async(callback, subscription_id=<YOUR SUBSCRIPTION ID>)
 
 
 Or you may use the environment variables.
@@ -198,13 +216,6 @@ Or
 .. code-block::
 
     python ./dnaStreaming/demo/show_stream_async.py -s
-
-
-If you are having `ImportError:  No module named ...` run this in your terminal before running the demo:
-
-.. code-block::
-
-    export PYTHONPATH='.'
 
 
 Running Docker Demo
