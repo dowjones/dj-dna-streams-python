@@ -66,7 +66,7 @@ class Config(object):
 
     def get_uri_context(self):
         host = os.getenv(self.ENV_VAR_API_HOST, self.DEFAULT_HOST)
-        return host + '/alpha'
+        return host
 
     # in the following two methods, note that we use "SERVICE_ACCOUNT_ID" as a legacy,
     # alternate name for the "USER_KEY" parameter, from the customer's perspective
