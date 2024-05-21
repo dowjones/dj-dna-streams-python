@@ -1,7 +1,7 @@
 import time
 import requests
 import json
-from threading import Thread
+from threading import Thread, Event
 
 from google.api_core.exceptions import GoogleAPICallError, NotFound
 from google import pubsub_v1
@@ -9,7 +9,19 @@ from google import pubsub_v1
 from dnaStreaming import logger
 from dnaStreaming.config import Config
 from dnaStreaming.services import pubsub_service, credentials_service
+from dnaStreaming.services.availability_service import MAIN_REGION, BACKUP_REGION, ha_listen
 
+class ListenerController(object):
+    def __init__(self, thread, stop_event):
+        self.thread = thread
+        self.stop_event = stop_event
+
+    def stop_listener(self):
+        self.stop_event.set()
+        self.thread.join()
+
+    def listener_is_running(self):
+        self.thread.is_alive()
 
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = None
@@ -112,3 +124,54 @@ class Listener(object):
         logger.info(
             'Listeners for subscriptions have been configured, set and await message arrival.')
         return subscription
+
+    def listen_async_ha(self, on_message_callback, subscription_id=""):
+        def ack_message_and_callback(message):
+            pubsub_msg = json.loads(message.data)
+            logger.info("Received news message with ID: {}".format(
+                pubsub_msg['data'][0]['id']))
+            news_msg = pubsub_msg['data'][0]['attributes']
+            on_message_callback(news_msg, subscription_id)
+            message.ack()
+
+        main_pubsub_client = pubsub_service.get_client(self.config, MAIN_REGION)
+        backup_pubsub_client = pubsub_service.get_client(self.config, BACKUP_REGION)
+
+        subscription_id = subscription_id or self.config.subscription()
+
+        if not subscription_id:
+            raise Exception(
+                'No subscription specified. You must specify the subscription ID either through an environment variable, a config file or '
+                'by passing the value to the method.')
+
+        streaming_credentials = credentials_service.fetch_credentials(
+            self.config)
+
+        api_host = self.config.get_uri_context()
+
+        main_subscription_id = subscription_id
+        backup_subscription_id = subscription_id + "bak"
+
+        main_subscription_path = main_pubsub_client.subscription_path(
+            streaming_credentials['project_id'], main_subscription_id)
+        backup_subscription_path = backup_pubsub_client.subscription_path(
+            streaming_credentials['project_id'], backup_subscription_id)
+
+        stop_event = Event()
+        listener_thread = Thread(target=ha_listen, daemon=True, args=(
+            api_host,
+            stop_event,
+            main_subscription_path,
+            backup_subscription_path,
+            main_pubsub_client,
+            backup_pubsub_client,
+            ack_message_and_callback
+        ))
+        listener_thread.start()
+
+        listener_controller = ListenerController(listener_thread, stop_event)
+
+        logger.info(
+            'Listeners for subscriptions have been configured, set and await message arrival.')
+
+        return listener_controller
