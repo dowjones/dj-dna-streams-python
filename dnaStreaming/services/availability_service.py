@@ -7,19 +7,23 @@ MAIN_REGION = "us-central1"
 BACKUP_REGION = "us-east5"
 
 def get_active_region(api_host):
-    
-    ha_status_url = f"{api_host}/stream_health/get_active_region"
-    
-    response = requests.get(ha_status_url)
-    
-    if response.status_code != 200:
+
+    try:
+        ha_status_url = f"{api_host}/stream_health/get_active_region"
+
+        response = requests.get(ha_status_url)
+
+        assert response.status_code == 200, "Failed to fetch active region"
+
+        payload = response.json()
+
+        active_region = payload["data"]["active_region"]
+
+        return active_region
+
+    except:
+
         return None
-    
-    payload = response.json()
-
-    active_region = payload["data"]["active_region"]
-
-    return active_region
 
 
 def ha_listen(api_host, stop_event, main_subscription_path, backup_subscription_path, main_pubsub_client, backup_pubsub_client, callback):
