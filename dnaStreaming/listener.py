@@ -148,6 +148,7 @@ class Listener(object):
             self.config)
 
         api_host = self.config.get_uri_context()
+        user_key = self.config.get_user_key()
 
         main_subscription_id = subscription_id
         backup_subscription_id = subscription_id + "bak"
@@ -160,6 +161,8 @@ class Listener(object):
         stop_event = Event()
         listener_thread = Thread(target=ha_listen, daemon=True, args=(
             api_host,
+            user_key,
+            subscription_id,
             stop_event,
             main_subscription_path,
             backup_subscription_path,

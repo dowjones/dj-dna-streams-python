@@ -6,12 +6,17 @@ from dnaStreaming import logger
 MAIN_REGION = "us-central1"
 BACKUP_REGION = "us-east5"
 
-def get_active_region(api_host):
+def get_active_region(api_host, subscription_id, user_key):
 
     try:
         ha_status_url = f"{api_host}/stream_health/get_active_region"
 
-        response = requests.get(ha_status_url)
+        headers = {
+            "subscription-id": subscription_id,
+            "user-key": user_key
+        }
+
+        response = requests.get(url=ha_status_url, headers=headers)
 
         assert response.status_code == 200, "Failed to fetch active region"
 
@@ -26,7 +31,7 @@ def get_active_region(api_host):
         return None
 
 
-def ha_listen(api_host, stop_event, main_subscription_path, backup_subscription_path, main_pubsub_client, backup_pubsub_client, callback):
+def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription_path, backup_subscription_path, main_pubsub_client, backup_pubsub_client, callback):
 
     # The listener starts reading messages from the main region by default.
 
@@ -37,7 +42,7 @@ def ha_listen(api_host, stop_event, main_subscription_path, backup_subscription_
     
     while not stop_event.is_set():
 
-        active_region = get_active_region(api_host)
+        active_region = get_active_region(api_host, subscription_id, user_key)
 
         if active_region is None or active_region not in (MAIN_REGION, BACKUP_REGION):
             logger.warning(f"Got invalid region from API: {active_region}. Listener will keep reading from region {current_region}")
