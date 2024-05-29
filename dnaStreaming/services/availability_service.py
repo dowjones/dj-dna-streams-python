@@ -5,6 +5,7 @@ from dnaStreaming import logger
 
 MAIN_REGION = "us-central1"
 BACKUP_REGION = "us-east5"
+COOLDOWN_PERIOD = 5 * 60
 
 def get_active_region(api_host, subscription_id, user_key):
 
@@ -50,7 +51,7 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
         
         if current_region != active_region:
 
-            logger.warning(f"Regional indicent detected in {current_region}, switching to region {active_region}")
+            logger.warning(f"Switch event detected in, switching from region {current_region} to region {active_region}")
             
             logger.warning(f"Stopping listener in region {current_region}...")
 
@@ -69,12 +70,12 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
                 streaming_pull_future = backup_pubsub_client.subscribe(
                     backup_subscription_path, callback=callback)
                 
-            logger.warning(f"Started listener in region {current_region}")
+            logger.warning(f"Started listener in region {active_region}")
 
             current_region = active_region
         
         # We wait 5 minutes for cooldown for next call to API
-        time.sleep(5.0 * 60)
+        time.sleep(COOLDOWN_PERIOD)
 
     streaming_pull_future.cancel()
     streaming_pull_future.result()

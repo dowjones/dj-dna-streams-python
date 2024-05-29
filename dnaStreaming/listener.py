@@ -150,8 +150,8 @@ class Listener(object):
         api_host = self.config.get_uri_context()
         user_key = self.config.get_user_key()
 
-        main_subscription_id = subscription_id
-        backup_subscription_id = subscription_id + "bak"
+        main_subscription_id = subscription_id if "-bak-" not in subscription_id else subscription_id.replace("-filtered-bak-", "-filtered-")
+        backup_subscription_id = subscription_id if "-bak-" in subscription_id else subscription_id.replace("-filtered-", "-filtered-bak-")
 
         main_subscription_path = main_pubsub_client.subscription_path(
             streaming_credentials['project_id'], main_subscription_id)
