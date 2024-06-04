@@ -123,3 +123,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 ==================
 - [removed] - Fully removed legacy authentication method by password
 - [added] - Explicit argument to provide the path to the customer_config.json file to the Listener constructor (view README for more details)
+
+2.2.0 / 2024-05-21
+==================
+- [added] - Support for highly-available streams with a new method under the `Listener` class: `listen_async_ha`
