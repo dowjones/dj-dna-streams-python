@@ -126,12 +126,12 @@ class Listener(object):
         return subscription
 
     def listen_async_ha(self, on_message_callback, subscription_id=""):
-        def ack_message_and_callback(message):
+        def ack_message_and_callback(message, subscription_path):
             pubsub_msg = json.loads(message.data)
             logger.info("Received news message with ID: {}".format(
                 pubsub_msg['data'][0]['id']))
             news_msg = pubsub_msg['data'][0]['attributes']
-            on_message_callback(news_msg, subscription_id)
+            on_message_callback(news_msg, subscription_path)
             message.ack()
 
         main_pubsub_client = pubsub_service.get_client(self.config, MAIN_REGION)

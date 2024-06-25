@@ -4,7 +4,7 @@ from dnaStreaming.listener import Listener
 
 listener = Listener()
 quiet_demo = os.getenv('QUIET_DEMO', "false") == "true"
-max_secs = 5
+max_secs = 1000
 print("\n[ACTIVITY] Receiving messages (ASYNC) for {} seconds...\n[0]".format(max_secs), end='')
 
 
@@ -12,9 +12,9 @@ def callback(message, subscription_id):
     callback.counter += 1
     if not quiet_demo:
         if message['action'] != 'del':
-            print('[INFO] [MSG] [{}]: AN: {}, TITLE: {}'.format(callback.counter, message['an'], message['title']))
+            print('[INFO] [SUBSCRIPTION]: {} [MSG] [{}]: AN: {}, TITLE: {}'.format(subscription_id, callback.counter, message['an'], message['title']))
         else:
-            print('[INFO] [MSG] [{}]: AN: {}, *** DELETE ***'.format(callback.counter, message['an']))
+            print('[INFO] [SUBSCRIPTION]: {} [MSG] [{}]: AN: {}, *** DELETE ***'.format(subscription_id, callback.counter, message['an']))
     else:
         if callback.counter % 10 == 0:
             print('[{}]'.format(callback.counter), end='')
