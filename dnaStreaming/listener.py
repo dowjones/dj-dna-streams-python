@@ -138,7 +138,7 @@ class Listener(object):
         main_pubsub_client = pubsub_service.get_client(self.config, MAIN_REGION)
         backup_pubsub_client = pubsub_service.get_client(self.config, BACKUP_REGION)
 
-        subscription_id = subscription_id or self.config.subscription()
+        subscription_id = self.config.subscription()
 
         if not subscription_id:
             raise Exception(
