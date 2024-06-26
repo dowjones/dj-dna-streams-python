@@ -125,13 +125,14 @@ class Listener(object):
             'Listeners for subscriptions have been configured, set and await message arrival.')
         return subscription
 
-    def listen_async_ha(self, on_message_callback, subscription_id=""):
+    def listen_async_ha(self, on_message_callback):
         def ack_message_and_callback(message, subscription_path):
             pubsub_msg = json.loads(message.data)
             logger.info("Received news message with ID: {}".format(
                 pubsub_msg['data'][0]['id']))
             news_msg = pubsub_msg['data'][0]['attributes']
-            on_message_callback(news_msg, subscription_path)
+            short_subscription_id = subscription_path.split("/")[-1]
+            on_message_callback(news_msg, short_subscription_id)
             message.ack()
 
         main_pubsub_client = pubsub_service.get_client(self.config, MAIN_REGION)
