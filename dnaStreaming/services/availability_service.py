@@ -38,8 +38,14 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
 
     current_region = MAIN_REGION
 
+    def wrapped_callback(subscription_path):
+        def inner_callback(message):
+            callback(message, subscription_path)
+
+        return inner_callback
+
     streaming_pull_future = main_pubsub_client.subscribe(
-            main_subscription_path, callback=callback)
+        main_subscription_path, callback=wrapped_callback(main_subscription_path))
     
     while not stop_event.is_set():
 
@@ -65,10 +71,10 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
 
             if active_region == MAIN_REGION:
                 streaming_pull_future = main_pubsub_client.subscribe(
-                    main_subscription_path, callback=callback)
+                    main_subscription_path, callback=wrapped_callback(main_subscription_path))
             else: # active_region == BACKUP_REGION
                 streaming_pull_future = backup_pubsub_client.subscribe(
-                    backup_subscription_path, callback=callback)
+                    backup_subscription_path, callback=wrapped_callback(backup_subscription_path))
                 
             logger.warning(f"Started listener in region {active_region}")
 
