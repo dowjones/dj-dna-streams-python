@@ -127,3 +127,7 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.2.0 / 2024-05-21
 ==================
 - [added] - Support for highly-available streams with a new method under the `Listener` class: `listen_async_ha`
+
+2.2.1 / 2024-07-01
+==================
+- [fixed] - Fixed the `subscription_id` parameter of the listener callback so it changes if the listener switches regions (for HA streams only)
