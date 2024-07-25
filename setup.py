@@ -6,7 +6,7 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.rst'), encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = "2.2.1.dev1"
+VERSION = "2.2.1"
 RELEASE_TAG = f"release-{VERSION}"
 
 setup(

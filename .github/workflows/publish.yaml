@@ -1,4 +1,4 @@
-name: Upload Python Package to PyPI when a Release is Created
+name: Publish a new version to PyPI when a new release is published
 
 on:
   release:
