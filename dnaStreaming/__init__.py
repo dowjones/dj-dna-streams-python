@@ -5,7 +5,7 @@ import sys
 import logging
 
 def get_log_path():
-    env_log_path = os.getenv("DJ_DNA_LOG_PATH")
+    env_log_path = os.getenv("LOG_PATH")
     fallback_log_dir = os.path.expanduser('~/.dj-dna-streaming-python/logs')
     base_dir = os.path.dirname(__file__)
     default_path = os.path.join(base_dir, 'logs')
