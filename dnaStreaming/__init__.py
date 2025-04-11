@@ -4,6 +4,7 @@ import os
 import sys
 import logging
 
+
 def get_log_path():
     env_log_path = os.getenv("LOG_PATH")
     fallback_log_dir = os.path.expanduser('~/.dj-dna-streaming-python/logs')
@@ -25,6 +26,7 @@ def get_log_path():
                 print(f"WARNING: Cannot write to '{path}': {e}")
 
     raise RuntimeError("ERROR: Could not find a writable log directory.")
+
 
 log_path = get_log_path()
 print("Will log to: {}".format(log_path))
