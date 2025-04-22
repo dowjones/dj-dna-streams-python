@@ -28,6 +28,7 @@ setup(
     include_package_data=True,
 
     install_requires=[
+        'setuptools>=75.1.0',
         'googleapis-common-protos>=1.56.4',
         'google-auth>=2.11.0',
         'google-cloud-pubsub==2.13.6',
