@@ -41,6 +41,15 @@ To set your subscription ID, simply set an environment variable named 'SUBSCRIPT
     export SUBSCRIPTION_ID="ABC1234567889"
 
 
+To set your log folder path, simply set this folder variable named 'LOG_PATH' like so
+
+.. code-block::
+
+    export LOG_PATH="yourLogPath"
+
+
+
+
 The code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
 
 2. Using the configuration file.
