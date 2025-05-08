@@ -131,3 +131,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 2.2.1 / 2024-07-01
 ==================
 - [fixed] - Fixed the `subscription_id` parameter of the listener callback so it changes if the listener switches regions (for HA streams only)
+
+2.3.0 / 2025-05-08
+==================
+- [added] - Allow the use of temporal log path
+- [added] - Implement automatic builds via Github Actions
+- [added] - Adds a minimum version requirement for the setuptools package to ensure compatibility and access to necessary features or fixes.
