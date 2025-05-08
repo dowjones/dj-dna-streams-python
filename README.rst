@@ -41,7 +41,13 @@ To set your subscription ID, simply set an environment variable named 'SUBSCRIPT
     export SUBSCRIPTION_ID="ABC1234567889"
 
 
-The code above is the command line expression for setting this environment variable on Mac OSX. Other operating systems might have a slightly different techniques for setting environment variables on the command line.
+To set your log folder path, simply set this folder variable named 'LOG_PATH' like so
+
+.. code-block::
+
+    export LOG_PATH="/your/custom/log/path"
+
+
 
 2. Using the configuration file.
 ###################################################################
@@ -121,7 +127,25 @@ You may want to listen messages asynchronously like so:
 Log Files
 _________
 
-Very minimal logging is written to the module's path 'logs/dj-dna-streaming-python.log'. To keep maintenance simple this log is overwritten every time the app starts.
+
+Minimal logging is written to a file named `dj-dna-streaming-python.log`.
+
+By default, logs are written to the first available directory from the following list:
+
+1. A custom path set via the environment variable `LOG_PATH`.
+2. A `logs/` folder located within the package installation directory.
+3. A fallback directory: `~/.dj-dna-streaming-python/logs/`.
+
+The first writable location found is selected. A message like `Will log to: /your/custom/log/path` is printed to the console on startup.
+
+💡 The log file is overwritten each time the application starts to keep maintenance simple.
+
+You can specify:
+
+- **Absolute paths**: For example, `/var/log/dna-streaming`.
+- **Relative paths**: For example, `./logs`, relative to the current working directory at runtime.
+
+The code verifies that the specified path is writable. If it isn’t, it automatically falls back to the next available option.
 
 
 Testing
