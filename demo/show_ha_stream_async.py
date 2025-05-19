@@ -1,4 +1,5 @@
 import os
+import datetime
 from time import sleep
 from dnaStreaming.listener import Listener
 
@@ -7,21 +8,41 @@ quiet_demo = os.getenv('QUIET_DEMO', "false") == "true"
 max_secs = 1000
 print("\n[ACTIVITY] Receiving messages (ASYNC) for {} seconds...\n[0]".format(max_secs), end='')
 
+def print_message(message):
+    print(f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {message}")
 
-def callback(message, subscription_id):
-    callback.counter += 1
-    if not quiet_demo:
-        if message['action'] != 'del':
-            print('[INFO] [SUBSCRIPTION]: {} [MSG] [{}]: AN: {}, TITLE: {}'.format(subscription_id, callback.counter, message['an'], message['title']))
+def callback(factiva_message, subscription_id):
+    try:
+        callback.counter += 1
+        if 'action' in factiva_message.keys():
+            # Message is an article event
+            # Implement your logic according to the documentation:
+            # https://developer.dowjones.com/documents/site-docs-factiva_apis-factiva_analytics_apis-factiva_streams_api#article-specific-events
+            if factiva_message['action'] == 'add':
+                # Insert the article to the repository as new. Handle repeated messages.
+                print_message(f"[{factiva_message['action'].upper()}] AN: {factiva_message['an']} - {factiva_message['title']}")
+            elif factiva_message['action'] == 'rep':
+                # Upsert/Update/AddNewVersion the article in the repository. Handle repeated messages.
+                print_message(f"[{factiva_message['action'].upper()}] AN: {factiva_message['an']} - {factiva_message['title']}")
+            elif factiva_message['action'] == 'del':
+                # Delete or mark as deleted the article in the repository. Handle inexistent article AN.
+                print_message(f"[{factiva_message['action'].upper()}] AN: {factiva_message['an']} - *** DELETE ***")
+            else:
+                print_message(f"[ERROR] Factiva Action Not Handled: {factiva_message['action']}")
+        elif 'event_type' in factiva_message.keys():
+            # Message is a bulk action or service event
+            if factiva_message['event_type'] == 'source_delete':
+                # Delete all articles from the repository matching the source_code. Handle inexistent source_code and repeated messages.
+                print_message(f"[{factiva_message['event_type'].upper()}] Source: {factiva_message['source_code'].upper()} - {factiva_message['description']}")
+            else:
+                print_message(f"[ERROR] Factiva Event Type Not Handled: {factiva_message['event_type']}")
         else:
-            print('[INFO] [SUBSCRIPTION]: {} [MSG] [{}]: AN: {}, *** DELETE ***'.format(subscription_id, callback.counter, message['an']))
-    else:
-        if callback.counter % 10 == 0:
-            print('[{}]'.format(callback.counter), end='')
-        else:
-            print('.', end='')
+            print_message(f"[ERROR] Unexpected Message Format:[{factiva_message}]")
+    except Exception as e:
+        print_message(f"[ERROR] Error processing Factiva message: {e}")
+        # Only return False if you want to stop the listener
+        return True
     return True
-
 
 callback.counter = 0
 listener_controller = listener.listen_async_ha(callback)
