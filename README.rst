@@ -194,7 +194,7 @@ If you are enhancing this codebase (and not just using it as a library), follow 
     virtualenv venv
 
 
-4. Then activate the virutal environment by executing this command:
+4. Then activate the virtual environment by executing this command:
 ###################################################################
 
 .. code-block::
@@ -232,14 +232,14 @@ Execute the following at the project root:
 
 .. code-block::
 
-    python ./dnaStreaming/demo/show_stream.py -s
+    python ./demo/show_stream.py -s
 
 
 Or
 
 .. code-block::
 
-    python ./dnaStreaming/demo/show_stream_async.py -s
+    python ./demo/show_stream_async.py -s
 
 
 Running Docker Demo
