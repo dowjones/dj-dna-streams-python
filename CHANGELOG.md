@@ -137,3 +137,9 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [added] - Allow the use of temporal log path
 - [added] - Implement automatic builds via Github Actions
 - [added] - Adds a minimum version requirement for the setuptools package to ensure compatibility and access to necessary features or fixes.
+
+
+2.3.1 / 2025-05-27
+==================
+- [added] - Updated demo scripts to properly handle the new 'source_delete' event type as well as any future event types.
+- [added] - Improve demo scripts folder location to be easier to found it
