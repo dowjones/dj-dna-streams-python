@@ -157,25 +157,33 @@ The code verifies that the specified path is writable. If it isn’t, it automat
 
 ---
 
-## Testing & Linting (for developers)
+## Development, Testing & Linting (for developers)
 
-### Running Tests
-To run the standard test suite:
+### Setup
+
+To prepare for local development, make sure to create a virtual environment and install
+both runtime and dev dependencies (make sure to run with a recent version of Python 3):
 
 ```bash
-cd dnaStreaming/test
-pip install -r requirements.txt
-py.test . -s
+python3 install -m venv env
+source env/bin/activate
+# Install runtime dependencies from pyproject.toml
+pip3 install .
+# Install dev dependencies from pyproject.toml
+pip3 install -e ".[dev]"
 ```
 
-Alternatively, to test against multiple Python versions (e.g., Python 2.7 and 3.5), use `tox`:
+### Running Tests
+To test against multiple Python versions (e.g., Python >= 3.10), use `tox`:
 
 ```bash
 tox
 ```
 
-### Linting (Flake8)
-If you are maintaining this library, ensure you run `flake8` before you commit. At the project root command line, run:
+### Linting
+Before releasing, or ideally, before you commit, make sure to `ruff` your code 
+to align with minimal but recommended linting. At the project root, run:
 
 ```bash
-flake8 ./dnaStreaming ./tests
+ruff
+```

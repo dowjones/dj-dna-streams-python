@@ -127,3 +127,6 @@ venv.bak/
 
 # Visual Studio Code
 .vscode
+
+# Ruff files
+.ruff_cache

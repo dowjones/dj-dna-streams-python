@@ -1,5 +1,4 @@
 import time
-import requests
 import json
 from threading import Thread, Event
 

@@ -1,0 +1,92 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools_scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dnaStreaming"
+description = "A Python 3 library for Dow Jones customers to consume data from a Factiva Analytics Stream."
+dynamic = ["version"]
+license = { text = "MIT" }
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+    { name = "Zachary Kagan", email = "zachary.kagan@dowjones.com" },
+    { name = "Daniel Morales", email = "daniel.morales@dowjones.com" },
+    { name = "Alan Fuentes", email = "alan.fuentes@dowjones.com" },
+    { name = "Carlos Blazquez", email = "carlos.blazquez@dowjones.com" },
+    { name = "Carlos Niño", email = "carlos.ninoalarcon@dowjones.com" },
+]
+
+keywords = ["DOWJONES", "FACTIVA", "STREAMS"]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3"
+]
+
+# google-api-core and google-auth are included inside google-cloud-pubsub
+# but is is a good practice to explicitly include them as well
+# Important: make sure to align the versions for both dependencies with
+# the constraints set in the setup.py file from the PubSub library here:
+#    - https://github.com/googleapis/google-cloud-python/blob/main/packages/google-cloud-pubsub/setup.py 
+dependencies = [
+    "google-cloud-pubsub>=2.36.0",
+    "google-auth>=2.49.0",
+    "google-api-core>=2.30.0",
+    "requests>=2.32.5"
+]
+
+[project.optional-dependencies]
+dev = [
+    "tox",
+    "ruff",
+    "pytest"
+]
+
+[project.urls]
+Homepage = "https://github.com/dowjones/dj-dna-streams-python"
+Download = "https://github.com/dowjones/dj-dna-streams-python/archive/master.tar.gz"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+exclude = ["tests", "tests.*"]
+
+[tool.setuptools_scm]
+# Leave this section empty to enable git-tag versioning.
+
+[tool.ruff]
+target-version = "py314"
+
+exclude = [
+    ".git",
+    ".github",
+    ".venv",
+    "venv",
+    "env",
+    "__pycache__",
+    "logs",
+    "dnaStreaming.egg-info"
+]
+
+[tool.ruff.lint]
+# Which rules Ruff will check.
+# "E" and "W" are pycodestyle (errors and warnings).
+# "F" is Pyflakes (logical errors).
+# "I" is isort (import sorting).
+select = ["E", "F", "W", "I"]
+
+ignore = [
+    "E203", # space before colons
+    "E231", # missing space after comma, semicolon or colon
+    "E266", # too many hashtags for a comment
+    "E501" # lines too long
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
