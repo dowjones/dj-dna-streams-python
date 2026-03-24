@@ -26,8 +26,8 @@ class ListenerController(object):
 class Listener(object):
     DEFAULT_UNLIMITED_MESSAGES = None
 
-    def __init__(self, service_account_id=None, user_key=None, config_file=None):
-        config = Config(service_account_id, user_key, config_file)
+    def __init__(self, service_account_id=None, user_key=None, oauth_token=None, config_file=None):
+        config = Config(service_account_id, user_key, oauth_token, config_file)
         self._initialize(config)
         self.current_subscription_index = 0
 

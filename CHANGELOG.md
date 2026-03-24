@@ -143,3 +143,10 @@ the subscription *and* consuming it. Instead they will just consume an already e
 ==================
 - [added] - Updated demo scripts to properly handle the new 'source_delete' event type as well as any future event types.
 - [added] - Improve demo scripts folder location to be easier to found it
+
+2.4.0 / 2026-TODO
+==================
+- [added] - Authentication via OAuth bearer token
+- [changed] - Upgraded to Python 3.14
+- [changed] - Upgraded dependencies
+- [changed] - Upgraded folder structure
