@@ -1,6 +1,6 @@
-import os
 import datetime
 from time import sleep
+
 from dnaStreaming.listener import Listener
 
 listener = Listener()
@@ -27,7 +27,7 @@ def callback(factiva_message, subscription_id):
                 print_message(f"[ARTICLE] [DEL] AN: {factiva_message['an']} - *** DELETE ***")
             else:
                 print_message(f"[ERROR] Factiva Action Not Handled: {factiva_message['action']}")
-            
+
         elif 'event_type' in factiva_message.keys():
             # Message is a bulk action or service event
             if factiva_message['event_type'] == 'source_delete':
@@ -35,14 +35,14 @@ def callback(factiva_message, subscription_id):
                 print_message(f"[EVENT] [SOURCE_DELETE] Source: {factiva_message['source_code'].upper()} - {factiva_message['description']}")
             else:
                 print_message(f"[ERROR] Factiva Event Type Not Handled: {factiva_message['event_type']}")
-                
+
         else:
             print_message(f"[ERROR] Unexpected Message Format:[{factiva_message}]")
-            
+
         callback.counter += 1
         if callback.counter % 100 == 0:
             print_message(f"[INFO] *** Processed {callback.counter} messages ***")
-                
+
     except Exception as e:
         print_message(f"[ERROR] Error processing Factiva message: {e}")
         # Only return False if you want to stop the listener

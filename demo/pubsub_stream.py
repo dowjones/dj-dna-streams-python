@@ -1,9 +1,11 @@
-import os
-import json
 import datetime
+import json
+import os
+
 from google.cloud import pubsub_v1
-from dnaStreaming.listener import Listener
+
 from dnaStreaming import logger
+from dnaStreaming.listener import Listener
 
 gcp_project_id = os.getenv('GCP_PROJECT_ID', None)
 gcp_pubsub_topic = os.getenv('GCP_PUBSUB_TOPIC', None)
@@ -35,9 +37,9 @@ if gcp_project_id is not None and gcp_pubsub_topic is not None and gcp_creds is 
                     print_message(f"[ARTICLE] [DEL] AN: {factiva_message['an']} - *** DELETE ***")
                 else:
                     print_message(f"Factiva Action Not Handled: {factiva_message['action']}")
-                
+
                 logger.info(f"Sent to GCP Pub/Sub, message with AN: {factiva_message.get('an', 'N/A')}")
-                
+
             elif 'event_type' in factiva_message.keys():
                 # Message is a bulk action or service event
                 if factiva_message['event_type'] == 'source_delete':
@@ -47,21 +49,21 @@ if gcp_project_id is not None and gcp_pubsub_topic is not None and gcp_creds is 
                     print_message(f"Factiva Event Type Not Handled: {factiva_message['event_type']}")
 
                 logger.info(f"Sent to GCP Pub/Sub, message with event: {factiva_message.get('event_type', 'N/A')}")
-                
+
             else:
                 print_message(f"Unexpected Message Format:[{factiva_message}]")
-                
+
             # Publish the message to GCP Pub/Sub
             m_data = json.dumps(factiva_message, ensure_ascii=False).encode("utf-8")
             ps_publisher.publish(topic_path, data=m_data)
-            
+
             callback.counter += 1
-        
+
             if callback.counter % 100 == 0:
                 print_message(f"[INFO] *** Processed {callback.counter} messages ***")
-                
+
             return True
-        
+
         except Exception as e:
             logger.error(f"Error processing Factiva message: {e}")
             # Only return False if you want to stop the listener
@@ -70,7 +72,7 @@ if gcp_project_id is not None and gcp_pubsub_topic is not None and gcp_creds is 
     callback.counter = 0
     print_message(f"[INFO] *** Processed {callback.counter} messages ***")
     listener.listen(callback)
-    
+
 else:
     print("[ERROR]: Required ENV variables not set")
     if gcp_project_id is None:

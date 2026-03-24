@@ -1,5 +1,6 @@
-import requests
 import time
+
+import requests
 
 from dnaStreaming import logger
 
@@ -46,7 +47,7 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
 
     streaming_pull_future = main_pubsub_client.subscribe(
         main_subscription_path, callback=wrapped_callback(main_subscription_path))
-    
+
     while not stop_event.is_set():
 
         active_region = get_active_region(api_host, subscription_id, user_key)
@@ -54,11 +55,11 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
         if active_region is None or active_region not in (MAIN_REGION, BACKUP_REGION):
             logger.warning(f"Got invalid region from API: {active_region}. Listener will keep reading from region {current_region}")
             continue
-        
+
         if current_region != active_region:
 
             logger.warning(f"Switch event detected in, switching from region {current_region} to region {active_region}")
-            
+
             logger.warning(f"Stopping listener in region {current_region}...")
 
             # We stop the previous listening process
@@ -75,11 +76,11 @@ def ha_listen(api_host, user_key, subscription_id, stop_event, main_subscription
             else: # active_region == BACKUP_REGION
                 streaming_pull_future = backup_pubsub_client.subscribe(
                     backup_subscription_path, callback=wrapped_callback(backup_subscription_path))
-                
+
             logger.warning(f"Started listener in region {active_region}")
 
             current_region = active_region
-        
+
         # We wait 5 minutes for cooldown for next call to API
         time.sleep(COOLDOWN_PERIOD)
 

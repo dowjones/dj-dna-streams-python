@@ -1,14 +1,19 @@
-import time
 import json
-from threading import Thread, Event
+import time
+from threading import Event, Thread
 
-from google.api_core.exceptions import GoogleAPICallError, NotFound
 from google import pubsub_v1
+from google.api_core.exceptions import GoogleAPICallError, NotFound
 
 from dnaStreaming import logger
 from dnaStreaming.config import Config
-from dnaStreaming.services import pubsub_service, credentials_service
-from dnaStreaming.services.availability_service import MAIN_REGION, BACKUP_REGION, ha_listen
+from dnaStreaming.services import credentials_service, pubsub_service
+from dnaStreaming.services.availability_service import (
+    BACKUP_REGION,
+    MAIN_REGION,
+    ha_listen,
+)
+
 
 class ListenerController(object):
     def __init__(self, thread, stop_event):

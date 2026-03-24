@@ -1,6 +1,6 @@
-import os
 import datetime
 from time import sleep
+
 from dnaStreaming.listener import Listener
 
 listener = Listener()
@@ -40,7 +40,7 @@ def callback(factiva_message, subscription_id):
         callback.counter += 1
         if callback.counter % 100 == 0:
             print_message(f"[INFO] *** Processed {callback.counter} messages ***")
-            
+
     except Exception as e:
         print_message(f"[ERROR] Error processing Factiva message: {e}")
         # Only return False if you want to stop the listener

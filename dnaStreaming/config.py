@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 
+
 class Config(object):
 
     DEFAULT_HOST = 'https://api.dowjones.com'
@@ -77,7 +78,7 @@ class Config(object):
     def get_uri_context(self):
         host = os.getenv(self.ENV_VAR_API_HOST, self.DEFAULT_HOST)
         return host
-    
+
     def get_oauth_token(self):
 
         potential_oauth_token_var = lambda: self.oauth_token

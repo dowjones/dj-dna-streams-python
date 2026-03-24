@@ -1,5 +1,5 @@
-import os
 import datetime
+
 from dnaStreaming.listener import Listener
 
 listener = Listener()
@@ -13,7 +13,7 @@ def print_message(message):
 
 def callback(factiva_message: dict, subscription_id: str) -> bool:
     try:
-        if 'action' in factiva_message.keys(): 
+        if 'action' in factiva_message.keys():
             # Message is an article event
             # Implement your logic according to the documentation:
             # https://developer.dowjones.com/documents/site-docs-factiva_apis-factiva_analytics_apis-factiva_streams_api#article-specific-events
@@ -39,11 +39,11 @@ def callback(factiva_message: dict, subscription_id: str) -> bool:
 
         else:
             print_message(f"[ERROR] Unexpected Message Format:[{factiva_message}]")
-            
+
         callback.counter += 1
         if callback.counter % 100 == 0:
             print_message(f"[INFO] *** Processed {callback.counter} messages ***")
-    
+
     except Exception as e:
         print_message(f"[ERROR] Error processing Factiva message: {e}")
         # Only return False if you want to stop the listener

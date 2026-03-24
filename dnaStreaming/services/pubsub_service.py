@@ -2,9 +2,8 @@ from __future__ import absolute_import, division, print_function
 
 from google.cloud.pubsub_v1 import SubscriberClient
 
-from dnaStreaming.services import authentication_service
-from dnaStreaming.services import credentials_service
-from dnaStreaming.services.availability_service import MAIN_REGION, BACKUP_REGION
+from dnaStreaming.services import authentication_service, credentials_service
+from dnaStreaming.services.availability_service import BACKUP_REGION, MAIN_REGION
 
 
 def get_client(config, region=None):
