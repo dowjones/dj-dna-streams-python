@@ -161,20 +161,20 @@ The code verifies that the specified path is writable. If it isn’t, it automat
 
 ### Setup
 
-To prepare for local development, make sure to create a virtual environment and install
+To prepare for local development and debugging, create a virtual environment and install
 both runtime and dev dependencies (make sure to run with a recent version of Python 3):
 
 ```bash
 python3 install -m venv env
 source env/bin/activate
-# Install runtime dependencies from pyproject.toml
-pip3 install .
+# Install runtime dependencies from pyproject.toml (-e for recommended editable install)
+pip3 install -e .
 # Install dev dependencies from pyproject.toml
 pip3 install -e ".[dev]"
 ```
 
 ### Running Tests
-To test against multiple Python versions (e.g., Python >= 3.10), use `tox`:
+To test the library works over multiple Python versions (e.g., Python >= 3.10), use `tox`:
 
 ```bash
 tox
@@ -185,5 +185,7 @@ Before releasing, or ideally, before you commit, make sure to `ruff` your code
 to align with minimal but recommended linting. At the project root, run:
 
 ```bash
-ruff
+ruff check . # checks code without changing it
+ruff check --fix . # checks code and applies changes
+ruff format . # formats code
 ```

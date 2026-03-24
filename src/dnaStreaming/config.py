@@ -1,10 +1,11 @@
 from __future__ import absolute_import, division
 
-import errno
+import logging
 import json
 import os
 from pathlib import Path
 
+logging.basicConfig(level=logging.INFO)
 
 class Config(object):
     DEFAULT_HOST = "https://api.dowjones.com"
@@ -30,26 +31,31 @@ class Config(object):
         self.headers = None
 
     def _initialize(self):
-        self._validate()
+        is_valid_path = self._validate()
 
-        with open(self.customer_config_path, "r") as f:
-            self.customer_config = json.load(f)
+        if is_valid_path:
+            with open(self.customer_config_path, "r") as f:
+                self.customer_config = json.load(f)
+        else:
+            self.customer_config = {}
 
         self.initialized = True
         self.headers = None
 
     def _validate(self):
+        
+        is_valid_path = True
+
         if not os.path.isfile(self.customer_config_path):
-            raise FileNotFoundError(
-                errno.ENOENT, os.strerror(errno.ENOENT), self.customer_config_path
-            )
+            logging.warning(f"Could not find customer config file in specified location {self.customer_config_path}")
+            is_valid_path = False
 
         if not os.access(self.customer_config_path, os.R_OK):
-            raise Exception(
-                "Encountered permission problem reading file from path '{}'.".format(
-                    self.customer_config_path
-                )
-            )
+            logging.warning(f"Encountered permission problem to read config file {self.customer_config_path}")
+            is_valid_path = False
+
+        return is_valid_path
+
 
     def get_headers(self):
         if self.headers:

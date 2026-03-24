@@ -54,6 +54,7 @@ Download = "https://github.com/dowjones/dj-dna-streams-python/archive/master.tar
 include-package-data = true
 
 [tool.setuptools.packages.find]
+where = ["src"]
 exclude = ["tests", "tests.*"]
 
 [tool.setuptools_scm]
@@ -90,3 +91,26 @@ ignore = [
 [tool.ruff.format]
 quote-style = "double"
 indent-style = "space"
+
+[tool.tox]
+env_list = [
+    "py310",
+    "py311",
+    "py312",
+    "py313",
+    "py314"
+]
+
+[tool.tox.env_run_base]
+description = "Run test suite with pytest"
+deps = [
+    "pytest",
+]
+pass_env = [
+    "USER_KEY",
+    "SUBSCRIPTION_ID",
+    "API_HOST"
+]
+commands = [
+    ["pytest", "tests/"],
+]
