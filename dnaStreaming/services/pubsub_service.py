@@ -8,7 +8,9 @@ from dnaStreaming.services.availability_service import BACKUP_REGION, MAIN_REGIO
 
 def get_client(config, region=None):
     streaming_credentials = credentials_service.fetch_credentials(config)
-    credentials = authentication_service.get_authenticated_oauth_credentials(streaming_credentials)
+    credentials = authentication_service.get_authenticated_oauth_credentials(
+        streaming_credentials
+    )
 
     if region in (MAIN_REGION, BACKUP_REGION):
         client_options = {"api_endpoint": f"{region}-pubsub.googleapis.com:443"}
