@@ -177,6 +177,10 @@ pip3 install -e ".[dev]"
 To test the library works over multiple Python versions (e.g., Python >= 3.10), use `tox`:
 
 ```bash
+# Make sure to set USER_KEY, API_HOST and SUBSCRIPTION_ID accordingly
+# Strong recommendation:
+#  - SUBSCRIPTION_ID should belong to an active stream with about 2000 queued messages
+#    for faster test execution times.
 tox
 ```
 

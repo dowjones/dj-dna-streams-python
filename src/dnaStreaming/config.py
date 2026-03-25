@@ -1,7 +1,7 @@
 from __future__ import absolute_import, division
 
-import logging
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -43,7 +43,7 @@ class Config(object):
         self.headers = None
 
     def _validate(self):
-        
+
         is_valid_path = True
 
         if not os.path.isfile(self.customer_config_path):
