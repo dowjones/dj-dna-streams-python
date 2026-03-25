@@ -149,4 +149,4 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [added] - Authentication via OAuth bearer token
 - [changed] - Upgraded to Python 3.14
 - [changed] - Upgraded dependencies
-- [changed] - Upgraded package structure
+- [changed] - Upgraded package to work with pyproject.toml
