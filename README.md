@@ -4,14 +4,72 @@ A Python 3 library for Dow Jones customers to consume data from a Factiva Analyt
 
 ## Installation
 
-To use this, we recommend installing it via `pip` by making the following addition to your `requirements.txt`:
+### Without source code
 
-```text
-# To fetch the latest version from PyPI
+If you don't wish to work with any of the demo snippets provided by this repository,
+you can proceed with a clean installation of the package by running either of the
+following commands.
+
+```bash
+# Install the last published version
+pip3 install dnaStreaming
+
+# Install a specific published version
+pip3 install dnaStreaming==<VERSION>
+
+# Install from a specific Github branch
+pip3 install git+https://github.com/dowjones/dj-dna-streams-python.git@<BRANCH_NAME>
+```
+
+Alternatively, you can add add it as a dependency inside your `requirements.txt` file
+
+```txt
+...
+# Include ONE of the following lines:
 dnaStreaming
+dnaStreaming==<VERSION>
+git+https://github.com/dowjones/dj-dna-streams-python.git@<BRANCH_NAME>
+...
+```
 
-# To fetch the latest version from GitHub
-git+https://github.com/dowjones/dj-dna-streams-python#egg=dnaStreaming
+Or inside your `pyproject.toml` file
+
+```toml
+[project]
+...
+dependencies = [
+    # Include only ONE of the following lines:
+    "dnaStreaming",
+    "dnaStreaming==<VERSION>",
+    "git+https://github.com/dowjones/dj-dna-streams-python.git@<BRANCH_NAME>",
+]
+```
+
+### With source code
+
+On the other hand, if you wish to work with one of the code samples provided in this
+repository, or you want to work with a customized version of the listener by you,
+you can perform an installation from source code once you have cloned the
+repository.
+
+```bash
+cd dj-dna-streams-python
+git switch <BRANCH> # optional if you wish to work on a specific branch
+python3 install -m venv env
+source env/bin/activate
+pip3 install -e . # editable install, recommended
+```
+
+#### Run the demo files
+
+Once you're done installing from source code, make sure you set your credentials as environment variables as described by the [Authentication](#authentication) and [Configuration](#configuration) sections.
+
+Then, you can run the demo file that you prefer:
+
+```bash
+python3 demo/show_stream.py
+# or
+python3 demo/show_stream_async.py
 ```
 
 ---
