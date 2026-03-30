@@ -108,6 +108,7 @@ deps = [
 ]
 pass_env = [
     "USER_KEY",
+    "OAUTH_TOKEN",
     "SUBSCRIPTION_ID",
     "API_HOST"
 ]
