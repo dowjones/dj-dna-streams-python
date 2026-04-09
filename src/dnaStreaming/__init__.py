@@ -1,15 +1,15 @@
 from __future__ import absolute_import, division, print_function
 
+import logging
 import os
 import sys
-import logging
 
 
 def get_log_path():
     env_log_path = os.getenv("LOG_PATH")
-    fallback_log_dir = os.path.expanduser('~/.dj-dna-streaming-python/logs')
+    fallback_log_dir = os.path.expanduser("~/.dj-dna-streaming-python/logs")
     base_dir = os.path.dirname(__file__)
-    default_path = os.path.join(base_dir, 'logs')
+    default_path = os.path.join(base_dir, "logs")
 
     candidates = [env_log_path, default_path, fallback_log_dir]
 
@@ -17,9 +17,9 @@ def get_log_path():
         if path:
             try:
                 os.makedirs(path, exist_ok=True)
-                testfile = os.path.join(path, '.write_test')
-                with open(testfile, 'w') as f:
-                    f.write('test')
+                testfile = os.path.join(path, ".write_test")
+                with open(testfile, "w") as f:
+                    f.write("test")
                 os.remove(testfile)
                 return path
             except Exception as e:
@@ -35,8 +35,10 @@ print("Will log to: {}".format(log_path))
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger()
 
-fileHandler = logging.FileHandler(os.path.join(log_path, 'dj-dna-streaming-python.log'))
-logFormatter = logging.Formatter("%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s")
+fileHandler = logging.FileHandler(os.path.join(log_path, "dj-dna-streaming-python.log"))
+logFormatter = logging.Formatter(
+    "%(asctime)s [%(threadName)-12.12s] [%(levelname)-5.5s]  %(message)s"
+)
 fileHandler.setFormatter(logFormatter)
 logger.addHandler(fileHandler)
 
