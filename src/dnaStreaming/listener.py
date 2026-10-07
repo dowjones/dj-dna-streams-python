@@ -48,8 +48,6 @@ class Listener(object):
         subscription_id="",
         batch_size=10,
     ):
-        pubsub_client = pubsub_service.get_client(self.config)
-
         subscription_id = subscription_id or self.config.subscription()
         if not subscription_id:
             raise Exception(
@@ -57,7 +55,11 @@ class Listener(object):
                 + "variable, a config file or by passing the value to the method."
             )
 
-        streaming_credentials = credentials_service.fetch_credentials(self.config)
+        pubsub_client = pubsub_service.get_client(self.config, subscription_id)
+
+        streaming_credentials = credentials_service.fetch_credentials(
+            self.config, subscription_id
+        )
         subscription_path = pubsub_client.subscription_path(
             streaming_credentials["project_id"], subscription_id
         )
@@ -119,7 +121,7 @@ class Listener(object):
                     "the stream again."
                 )
                 time.sleep(10)
-                pubsub_client = pubsub_service.get_client(self.config)
+                pubsub_client = pubsub_service.get_client(self.config, subscription_id)
 
     def listen_async(self, on_message_callback, subscription_id=""):
         def ack_message_and_callback(message):
@@ -131,8 +133,6 @@ class Listener(object):
             on_message_callback(news_msg, subscription_id)
             message.ack()
 
-        pubsub_client = pubsub_service.get_client(self.config)
-
         subscription_id = subscription_id or self.config.subscription()
 
         if not subscription_id:
@@ -141,7 +141,11 @@ class Listener(object):
                 "by passing the value to the method."
             )
 
-        streaming_credentials = credentials_service.fetch_credentials(self.config)
+        pubsub_client = pubsub_service.get_client(self.config, subscription_id)
+
+        streaming_credentials = credentials_service.fetch_credentials(
+            self.config, subscription_id
+        )
         subscription_path = pubsub_client.subscription_path(
             streaming_credentials["project_id"], subscription_id
         )
@@ -164,9 +168,6 @@ class Listener(object):
             on_message_callback(news_msg, short_subscription_id)
             message.ack()
 
-        main_pubsub_client = pubsub_service.get_client(self.config, MAIN_REGION)
-        backup_pubsub_client = pubsub_service.get_client(self.config, BACKUP_REGION)
-
         subscription_id = self.config.subscription()
 
         if not subscription_id:
@@ -175,7 +176,16 @@ class Listener(object):
                 "by passing the value to the method."
             )
 
-        streaming_credentials = credentials_service.fetch_credentials(self.config)
+        main_pubsub_client = pubsub_service.get_client(
+            self.config, subscription_id, region=MAIN_REGION
+        )
+        backup_pubsub_client = pubsub_service.get_client(
+            self.config, subscription_id, region=BACKUP_REGION
+        )
+
+        streaming_credentials = credentials_service.fetch_credentials(
+            self.config, subscription_id
+        )
 
         api_host = self.config.get_uri_context()
         user_key = self.config.get_user_key()

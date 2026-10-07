@@ -4,11 +4,18 @@ import json
 
 import requests
 
+SUBSCRIPTION_ID_HEADER = "X-Subscription-Id"
 
-def fetch_credentials(config):
+
+def fetch_credentials(config, subscription_id=None):
+    # Copy the cached auth headers so the per-subscription header is not persisted in the config.
+    headers = dict(config.get_headers())
+    if subscription_id:
+        headers[SUBSCRIPTION_ID_HEADER] = subscription_id
+
     response = requests.get(
         config.get_uri_context() + "/sns-accounts/streaming-credentials",
-        headers=config.get_headers(),
+        headers=headers,
     )
 
     if response.status_code == 401:
