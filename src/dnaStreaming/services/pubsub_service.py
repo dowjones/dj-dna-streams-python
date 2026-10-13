@@ -6,10 +6,11 @@ from dnaStreaming.services import authentication_service, credentials_service
 from dnaStreaming.services.availability_service import BACKUP_REGION, MAIN_REGION
 
 
-def get_client(config, subscription_id=None, region=None):
-    streaming_credentials = credentials_service.fetch_credentials(
-        config, subscription_id
-    )
+def get_client(config, subscription_id=None, region=None, streaming_credentials=None):
+    if streaming_credentials is None:
+        streaming_credentials = credentials_service.fetch_credentials(
+            config, subscription_id
+        )
     credentials = authentication_service.get_authenticated_oauth_credentials(
         streaming_credentials
     )

@@ -55,10 +55,11 @@ class Listener(object):
                 + "variable, a config file or by passing the value to the method."
             )
 
-        pubsub_client = pubsub_service.get_client(self.config, subscription_id)
-
         streaming_credentials = credentials_service.fetch_credentials(
             self.config, subscription_id
+        )
+        pubsub_client = pubsub_service.get_client(
+            self.config, subscription_id, streaming_credentials=streaming_credentials
         )
         subscription_path = pubsub_client.subscription_path(
             streaming_credentials["project_id"], subscription_id
@@ -141,10 +142,11 @@ class Listener(object):
                 "by passing the value to the method."
             )
 
-        pubsub_client = pubsub_service.get_client(self.config, subscription_id)
-
         streaming_credentials = credentials_service.fetch_credentials(
             self.config, subscription_id
+        )
+        pubsub_client = pubsub_service.get_client(
+            self.config, subscription_id, streaming_credentials=streaming_credentials
         )
         subscription_path = pubsub_client.subscription_path(
             streaming_credentials["project_id"], subscription_id
@@ -176,15 +178,20 @@ class Listener(object):
                 "by passing the value to the method."
             )
 
-        main_pubsub_client = pubsub_service.get_client(
-            self.config, subscription_id, region=MAIN_REGION
-        )
-        backup_pubsub_client = pubsub_service.get_client(
-            self.config, subscription_id, region=BACKUP_REGION
-        )
-
         streaming_credentials = credentials_service.fetch_credentials(
             self.config, subscription_id
+        )
+        main_pubsub_client = pubsub_service.get_client(
+            self.config,
+            subscription_id,
+            region=MAIN_REGION,
+            streaming_credentials=streaming_credentials,
+        )
+        backup_pubsub_client = pubsub_service.get_client(
+            self.config,
+            subscription_id,
+            region=BACKUP_REGION,
+            streaming_credentials=streaming_credentials,
         )
 
         api_host = self.config.get_uri_context()

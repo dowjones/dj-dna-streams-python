@@ -93,3 +93,49 @@ def test_get_client_passes_subscription_id(config):
     assert mock_client.call_args.kwargs["client_options"] == {
         "api_endpoint": f"{MAIN_REGION}-pubsub.googleapis.com:443"
     }
+
+
+def test_get_client_uses_provided_credentials_without_fetching(config):
+    with (
+        patch.object(
+            pubsub_service.credentials_service, "fetch_credentials"
+        ) as mock_fetch,
+        patch.object(
+            pubsub_service.authentication_service,
+            "get_authenticated_oauth_credentials",
+        ) as mock_auth,
+        patch.object(pubsub_service, "SubscriberClient"),
+    ):
+        pubsub_service.get_client(
+            config, "sub-123", streaming_credentials=STREAMING_CREDENTIALS
+        )
+
+    mock_fetch.assert_not_called()
+    mock_auth.assert_called_once_with(STREAMING_CREDENTIALS)
+
+
+@pytest.mark.parametrize("method", ["listen", "listen_async", "listen_async_ha"])
+def test_listener_fetches_credentials_once(config, mock_get, monkeypatch, method):
+    from dnaStreaming import listener as listener_module
+    from dnaStreaming.listener import Listener
+
+    monkeypatch.setattr(config, "subscription", lambda: "sub-123")
+    listener = Listener.__new__(Listener)
+    listener._initialize(config)
+
+    with (
+        patch.object(
+            pubsub_service.authentication_service,
+            "get_authenticated_oauth_credentials",
+        ),
+        patch.object(pubsub_service, "SubscriberClient"),
+        patch.object(listener_module, "Thread"),
+    ):
+        if method == "listen":
+            listener.listen(lambda msg, sub: False, maximum_messages=0)
+        else:
+            getattr(listener, method)(lambda msg, sub: None)
+
+    assert mock_get.call_count == 1
+    headers = mock_get.call_args.kwargs["headers"]
+    assert headers[SUBSCRIPTION_ID_HEADER] == "sub-123"
