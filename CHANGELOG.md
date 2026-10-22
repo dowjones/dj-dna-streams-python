@@ -150,3 +150,8 @@ the subscription *and* consuming it. Instead they will just consume an already e
 - [changed] - Upgraded to Python 3.14
 - [changed] - Upgraded dependencies
 - [changed] - Upgraded package to work with pyproject.toml
+
+2.4.1 / 2026-10-22
+==================
+- [changed] - Requests to the streaming credentials endpoint now include the `X-Subscription-Id` header with the subscription ID being listened to
+- [fixed] - Streaming credentials are now fetched once per listen call instead of once per Pub/Sub client plus once for the project ID (previously 2 requests for `listen`/`listen_async` and 3 for `listen_async_ha`)
